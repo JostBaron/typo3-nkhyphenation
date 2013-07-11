@@ -23,11 +23,10 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
     protected $trie = array();
 
     /**
-     * Returns the hyphenation-TRIE.
+     * Special characters that may be contained in a word.
+     * @var string
      */
-    public function getTrie() {
-        return $this->trie;
-    }
+    protected $specialCharacters;
 
     /**
      * Builds a trie from a jsHyphenator pattern file.
@@ -84,6 +83,23 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
         foreach ($points as $point) {
             array_push($trie['points'], ($point === '') ? 0 : intval($point));
         }
+    }
+
+    /**
+     * Returns the hyphenation-TRIE.
+     * @return array
+     */
+    public function getTrie() {
+        return $this->trie;
+    }
+
+    /**
+     * Returns the special characters (the ones that do NOT make a word
+     * boundary).
+     * @return string
+     */
+    public function getSpecialCharacters() {
+        return $this->specialCharacters;
     }
 }
 

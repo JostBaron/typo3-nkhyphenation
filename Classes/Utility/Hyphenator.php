@@ -171,100 +171,82 @@ class Tx_Nkhyphenation_Utility_Hyphenator {
     }
 
     /**
-     * Word hyphenation.
-     * @param string $word
-     * @return string
+     * Hyphenation of a single word.
+     * @param string $word The word to hyphenate.
+     * @param array &$trie The trie with the patterns.
+     * @return string The word with hyphens inserted.
      */
-    private function word_hyphenation($word) {
-        if (mb_strlen($word) < $this->charmin)
-            return $word;
-        if (mb_strpos($word, $this->hyphen) !== false)
-            return $word;
-        if (isset($this->dictionary[mb_strtolower($word)]))
-            return $this->dictionary[mb_strtolower($word)];
+    protected function hyphenateWord($word, $trie) {
 
-        $text_word = '_' . $word . '_';
-        $word_length = mb_strlen($text_word);
-        $single_character = $this->mb_split_chars($text_word);
-        $text_word = mb_strtolower($text_word);
-        $hyphenated_word = array();
-        $numb3rs = array('0' => true, '1' => true, '2' => true, '3' => true, '4' => true, '5' => true, '6' => true, '7' => true, '8' => true, '9' => true);
+        $characters = str_split(strtolower('_' . $word . '_'));
+        $points = array_fill(0, count($characters),  0);
 
-        for ($position = 0; $position <= ($word_length - $this->charmin); $position++) {
-            $maxwins = min(($word_length - $position), $this->charmax);
+        for ($i = 0; $i < count($characters); $i++) {
 
-            for ($win = $this->charmin; $win <= $maxwins; $win++) {
+            $currentTrieNode =& $trie;
+            for ($j = $i; $j < count($characters); $j++) {
 
-                if (isset($this->patterns[mb_substr($text_word, $position, $win)])) {
-                    $pattern = $this->patterns[mb_substr($text_word, $position, $win)];
-                    $digits = 1;
-                    $pattern_length = mb_strlen($pattern);
+                // The character currently inspected
+                $character = $characters[$j];
 
-                    for ($i = 0; $i < $pattern_length; $i++) {
-                        $char = $pattern[$i];
-                        if (isset($numb3rs[$char])) {
-                            $zero = ($i == 0) ? $position - 1 : $position + $i - $digits;
-                            if (!isset($hyphenated_word[$zero]) || $hyphenated_word[$zero] != $char)
-                                $hyphenated_word[$zero] = $char;
-                            $digits++;
-                        }
+                // Check if we can walk down the trie fourther with the
+                // next letter. If not, break the loop.
+                if (!array_key_exists($character, $currentTrieNode)) {
+                    break;
+                }
+
+                $currentTrieNode =& $currentTrieNode[$character];
+                if (array_key_exists('points', $currentTrieNode)) {
+                    $nodePoints = $currentTrieNode['points'];
+
+                    for ($k = 0; $k < count($nodePoints); $k++) {
+                        $points[$i + $k] = max($points[$i + $k], $nodePoints[$k]);
                     }
                 }
             }
         }
 
-        $inserted = 0;
-        for ($i = $this->leftmin; $i <= (mb_strlen($word) - $this->rightmin); $i++) {
-            if (isset($hyphenated_word[$i]) && $hyphenated_word[$i] % 2 != 0) {
-                array_splice($single_character, $i + $inserted + 1, 0, $this->hyphen);
-                $inserted++;
+        $result = array();
+        $part = '';
+
+        for ($i = 1; $i < count($characters) - 1; $i++) {
+            if (($points[$i] % 2) === 1) {
+                array_push($result, $part);
+                $part = $characters[$i];
+            }
+            else {
+                $part .= $characters[$i];
             }
         }
 
-        return implode('', array_slice($single_character, 1, -1));
+        // Push the last part.
+        array_push($result, $part);
+
+        return implode('-', $result);
     }
 
     /**
      * Hyphenates a text.
-     * @param string $text
+     * @param string $text The text to hyphenate.
+     * @param Tx_Nkhyphenation_Domain_Model_HyphenationPatterns The patterns to
+     *        use.
      * @return string
      */
-    private function hyphenation($text) {
-        $word = "";
-        $tag = "";
-        $tag_jump = 0;
-        $output = array();
-        $word_boundaries = "<>\t\n\r\0\x0B !\"§$%&/()=?….,;:-–_„”«»‘’'/\\‹›()[]{}*+´`^|©℗®™℠¹²³";
-        $text = $text . " ";
+    private function hyphenation($text, Tx_Nkhyphenation_Domain_Model_HyphenationPatterns $patterns) {
 
-        for ($i = 0; $i < mb_strlen($text); $i++) {
-            $char = mb_substr($text, $i, 1);
-            if (mb_strpos($word_boundaries, $char) === false && $tag == "") {
-                $word .= $char;
-            } else {
-                if ($word != "") {
-                    $output[] = $this->word_hyphenation($word);
-                    $word = "";
-                }
-                if ($tag != "" || $char == "<")
-                    $tag .= $char;
-                if ($tag != "" && $char == ">") {
-                    $tag_name = (mb_strpos($tag, " ")) ? mb_substr($tag, 1, mb_strpos($tag, " ") - 1) : mb_substr($tag, 1, mb_strpos($tag, ">") - 1);
-                    if ($tag_jump == 0 && in_array(mb_strtolower($tag_name), $this->excludetags)) {
-                        $tag_jump = 1;
-                    } else if ($tag_jump == 0 || mb_strtolower(mb_substr($tag, -mb_strlen($tag_name) - 3)) == '</' . mb_strtolower($tag_name) . '>') {
-                        $output[] = $tag;
-                        $tag = '';
-                        $tag_jump = 0;
-                    }
-                }
-                if ($tag == "" && $char != "<" && $char != ">")
-                    $output[] = $char;
-            }
-        }
+        // Characters that are part of a word: \u200C is a zero-width space,
+        // \u00AD is the soft-hyphen &shy;
+        $unicodeWordCharacters = json_decode('"\u200C\u00AD"');
+        $wordSplittingRegex = '/([' . '\w@-' . $patterns->getSpecialCharacters() . $unicodeWordCharacters . ']+)/';
 
-        $text = join($output);
-        return substr($text, 0, strlen($text) - 1);
+        // For each word, call the hyphenation function.
+        preg_replace_callback(
+                $wordSplittingRegex,
+                function($matches) {
+                    return $this->hyphenateWord($matches[1], $patterns->getTrie());
+                },
+                $text
+        );
     }
 }
 
