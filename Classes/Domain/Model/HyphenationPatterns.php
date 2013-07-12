@@ -55,8 +55,12 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
      * Inserts a pattern into the hyphenation trie.
      * @param string $pattern The pattern to insert.
      * @return void
+     * @license The code of this method is heavily inspired (but not a simple
+     * port) of a code piece from Hyphenator.js. The code there is in turn a
+     * modified version of code from hypher.js by Bram Stein, 2011.
      */
     protected function insertPatternIntoTrie($pattern) {
+
         $characters = str_split(preg_replace('/\d/', '', $pattern));
         $points = preg_split('/[\D]/', $pattern);
 

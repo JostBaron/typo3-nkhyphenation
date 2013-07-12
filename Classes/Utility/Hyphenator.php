@@ -26,6 +26,9 @@ class Tx_Nkhyphenation_Utility_Hyphenator {
      * Hyphenation of a single word.
      * @param string $word The word to hyphenate.
      * @return string The word with hyphens inserted.
+     * @license The code of this method is heavily inspired (but not a simple
+     * port) of a code piece from Hyphenator.js. The code there is in turn a
+     * modified version of code from hypher.js by Bram Stein, 2011.
      */
     public function hyphenateWord($word) {
 
@@ -81,6 +84,9 @@ class Tx_Nkhyphenation_Utility_Hyphenator {
      * Hyphenates a text.
      * @param string $text The text to hyphenate.
      * @return string
+     * @license The code of this method is heavily inspired (but not a simple
+     * port) of a code piece from Hyphenator.js. The code there is in turn a
+     * modified version of code from hypher.js by Bram Stein, 2011.
      */
     public function hyphenation($text) {
 
