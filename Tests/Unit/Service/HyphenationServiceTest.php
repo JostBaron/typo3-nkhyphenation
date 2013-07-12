@@ -5,7 +5,7 @@
  *
  * @author Jost Baron <j.baron@netzkoenig.de>
  */
-class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
+class Tx_Nkhyphenation_Tests_Unit_Service_HyphenationServiceTest
         extends Tx_Extbase_Tests_Unit_BaseTestCase {
 
     /**
@@ -44,7 +44,7 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
         $this->hyphenationPatterns->setRightmin(0);
 
         $hyphenator = $this->getAccessibleMock(
-                'Tx_Nkhyphenation_Utility_Hyphenator',
+                'Tx_Nkhyphenation_Service_HyphenationService',
                 array('dummy'),
                 array($this->hyphenationPatterns)
         );
@@ -158,7 +158,7 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
         $this->hyphenationPatterns->setRightmin($minRight);
 
         $hyphenator = $this->getAccessibleMock(
-                'Tx_Nkhyphenation_Utility_Hyphenator',
+                'Tx_Nkhyphenation_Service_HyphenationService',
                 array('dummy'),
                 array($this->hyphenationPatterns)
         );
@@ -230,7 +230,7 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
         $this->hyphenationPatterns->setHyphen('-this-is-a-hyphen-');
 
         $hyphenator = $this->getAccessibleMock(
-                'Tx_Nkhyphenation_Utility_Hyphenator',
+                'Tx_Nkhyphenation_Service_HyphenationService',
                 array('dummy'),
                 array($this->hyphenationPatterns)
         );
@@ -251,7 +251,7 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
         $this->hyphenationPatterns->setSpecialCharacters($specialCharacters);
 
         $hyphenator = $this->getAccessibleMock(
-                'Tx_Nkhyphenation_Utility_Hyphenator',
+                'Tx_Nkhyphenation_Service_HyphenationService',
                 array('hyphenateWord'),
                 array($this->hyphenationPatterns)
         );

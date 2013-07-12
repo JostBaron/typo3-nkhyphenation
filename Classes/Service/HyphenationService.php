@@ -5,7 +5,7 @@
  * words and texts as defined by the given pattern set.
  * @author Jost Baron <j.baron@netzkoenig.de>
  */
-class Tx_Nkhyphenation_Utility_Hyphenator {
+class Tx_Nkhyphenation_Service_HyphenationService {
 
     /**
      * The patterns to use.
