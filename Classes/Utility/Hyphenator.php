@@ -50,18 +50,6 @@ class Tx_Nkhyphenation_Utility_Hyphenator {
     protected $rightmin;
 
     /**
-     * No idea what this does.
-     * @var int
-     */
-    protected $charmin;
-
-    /**
-     * No idea what this does.
-     * @var int
-     */
-    protected $charmax;
-
-    /**
      * Array of the tags whose content must not be hyphenated.
      * @var array
      */
@@ -173,17 +161,19 @@ class Tx_Nkhyphenation_Utility_Hyphenator {
     /**
      * Hyphenation of a single word.
      * @param string $word The word to hyphenate.
-     * @param array &$trie The trie with the patterns.
+     * @param Tx_Nkhyphenation_Domain_Model_HyphenationPatterns $patterns
+     *        The hyphenation patterns to use.
      * @return string The word with hyphens inserted.
      */
-    protected function hyphenateWord($word, $trie) {
+    protected function hyphenateWord($word, $patterns) {
 
         $characters = str_split(strtolower('_' . $word . '_'));
         $points = array_fill(0, count($characters),  0);
 
         for ($i = 0; $i < count($characters); $i++) {
 
-            $currentTrieNode =& $trie;
+            // Start from the root of the TRIE
+            $currentTrieNode = $patterns->getTrie();
             for ($j = $i; $j < count($characters); $j++) {
 
                 // The character currently inspected
@@ -195,7 +185,7 @@ class Tx_Nkhyphenation_Utility_Hyphenator {
                     break;
                 }
 
-                $currentTrieNode =& $currentTrieNode[$character];
+                $currentTrieNode = $currentTrieNode[$character];
                 if (array_key_exists('points', $currentTrieNode)) {
                     $nodePoints = $currentTrieNode['points'];
 
@@ -232,18 +222,27 @@ class Tx_Nkhyphenation_Utility_Hyphenator {
      *        use.
      * @return string
      */
-    private function hyphenation($text, Tx_Nkhyphenation_Domain_Model_HyphenationPatterns $patterns) {
+    protected function hyphenation($text, $patterns) {
 
         // Characters that are part of a word: \u200C is a zero-width space,
         // \u00AD is the soft-hyphen &shy;
         $unicodeWordCharacters = json_decode('"\u200C\u00AD"');
-        $wordSplittingRegex = '/([' . '\w@-' . $patterns->getSpecialCharacters() . $unicodeWordCharacters . ']+)/';
+        $wordSplittingRegex = '/([' . 'a-zA-Z0-9@\-' . $patterns->getSpecialCharacters() . $unicodeWordCharacters . ']+)/u';
+
+        if ('' !== $patterns->getSpecialCharacters()) {
+            error_log($text);
+            error_log('special characters: ' . $patterns->getSpecialCharacters());
+
+            $matches = array();
+            preg_match_all($wordSplittingRegex, $text, $matches);
+            error_log(print_r($matches, true));
+        }
 
         // For each word, call the hyphenation function.
         preg_replace_callback(
                 $wordSplittingRegex,
-                function($matches) {
-                    return $this->hyphenateWord($matches[1], $patterns->getTrie());
+                function($matches) use ($patterns) {
+                    return $this->hyphenateWord($matches[1], $patterns);
                 },
                 $text
         );

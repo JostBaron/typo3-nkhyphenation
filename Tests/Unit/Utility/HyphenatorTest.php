@@ -14,11 +14,6 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
     protected $hyphenationPatterns;
 
     /**
-     * Hyphenator to test.
-     */
-    protected $hyphenator;
-
-    /**
      * Create a mocked up hypenation patterns object.
      * @return void
      */
@@ -26,14 +21,6 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
         $this->hyphenationPatterns = $this->getAccessibleMock(
                 'Tx_Nkhyphenation_Domain_Model_HyphenationPatterns',
                 array('dummy')
-        );
-
-        $this->hyphenator = $this->getAccessibleMock(
-                'Tx_Nkhyphenation_Utility_Hyphenator',
-                array('dummy'),
-                array(),
-                '',
-                false
         );
     }
 
@@ -47,14 +34,22 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
             $inputString,
             $expectedResult) {
 
+        $hyphenator = $this->getAccessibleMock(
+                'Tx_Nkhyphenation_Utility_Hyphenator',
+                array('dummy'),
+                array(),
+                '',
+                false
+        );
+
         foreach ($patterns as $pattern) {
             $this->hyphenationPatterns->_call('insertPatternIntoTrie', $pattern);
         }
 
-        $result = $this->hyphenator->_call(
+        $result = $hyphenator->_call(
                 'hyphenateWord',
                 $inputString,
-                $this->hyphenationPatterns->_call('getTrie')
+                $this->hyphenationPatterns
         );
 
         $this->assertEquals($expectedResult, $result);
@@ -121,6 +116,100 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
                 ),
                 'someword',
                 'so-meword'
+            ),
+            'multiple matching patterns, overriding each other, highest level is odd' => array(
+                array(
+                    'o2me',
+                    'o3mew'
+                ),
+                'someword',
+                'so-meword'
+            ),
+        );
+    }
+
+    /**
+     * @test
+     * @dataProvider textSplittedIntoCorrectWordsDataProvider
+     * @return void
+     */
+    public function textSplittedIntoCorrectWords(
+            $specialCharacters,
+            $inputString,
+            $expectedParts) {
+
+        $this->hyphenationPatterns->_set('specialCharacters', $specialCharacters);
+
+        $hyphenator = $this->getAccessibleMock(
+                'Tx_Nkhyphenation_Utility_Hyphenator',
+                array('hyphenateWord'),
+                array(),
+                '',
+                false
+        );
+
+        for ($i = 0; $i < count($expectedParts); $i++) {
+            $hyphenator->expects($this->at($i))
+                       ->method('hyphenateWord')
+                       ->with($expectedParts[$i]);
+        }
+
+        $hyphenator->_call(
+                'hyphenation',
+                $inputString,
+                $this->hyphenationPatterns
+        );
+    }
+
+    public function textSplittedIntoCorrectWordsDataProvider() {
+        $unicodeJoiner = json_decode('"\u200C"');
+        $unicodeSoftHyphen = json_decode('"\u00AD"');
+
+        return array(
+            'empty string' => array(
+                '',
+                '',
+                array(),
+            ),
+            'single word' => array(
+                '',
+                'someword',
+                array('someword'),
+            ),
+            'multiple words' => array(
+                '',
+                'word1 word2 word3',
+                array('word1', 'word2', 'word3'),
+            ),
+            'no special chars set' => array(
+                '',
+                'word1äö',
+                array('word1'),
+            ),
+            'special chars set' => array(
+                'äöü',
+                'word1äö',
+                array('word1äö'),
+            ),
+            'multiple words, some special chars set, but not all' => array(
+                'öü',
+                'word1äö',
+                array('word1', 'ö'),
+            ),
+            'hyphened word' => array(
+                '',
+                'some-word',
+                array('some-word'),
+            ),
+            'joiner in word' => array(
+                '',
+                'some' . $unicodeJoiner . 'word',
+                array('some' . $unicodeJoiner . 'word'),
+            ),
+            'soft hyphen in word' => array(
+                '',
+                'some' . $unicodeSoftHyphen . 'word',
+                array('some' . $unicodeSoftHyphen . 'word'),
             ),
         );
     }
