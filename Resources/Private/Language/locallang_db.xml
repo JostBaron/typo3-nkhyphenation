@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'nkhyphenation'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="hyphenationpatterns_recordlabel">Hyphenation Patterns</label>
+			<label index="hyphenationpatterns_title_label">Name of pattern set</label>
+			<label index="hyphenationpatterns_specialcharacters_label">Special characters</label>
+			<label index="hyphenationpatterns_hyphen_label">String to insert as hyphen</label>
+			<label index="hyphenationpatterns_leftmin_label">Minimal number of characters in a word before the first hyphen</label>
+			<label index="hyphenationpatterns_rightmin_label">Minimal number of characters in a word after the last hyphen</label>
+		</languageKey>
+	</data>
+</T3locallang>

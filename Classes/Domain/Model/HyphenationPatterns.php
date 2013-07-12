@@ -11,6 +11,12 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
     extends Tx_Extbase_DomainObject_AbstractEntity {
 
     /**
+     * Title of this pattern set.
+     * @var string
+     */
+    protected $title;
+
+    /**
      * Trie of the hyphenation patterns.
      * @var array
      */
@@ -77,6 +83,22 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
         foreach ($points as $point) {
             array_push($trie['points'], ($point === '') ? 0 : intval($point));
         }
+    }
+
+    /**
+     * Returns the title of the record.
+     * @return string
+     */
+    public function getTitle() {
+        return $this->title;
+    }
+
+    /**
+     * Sets the title of the record.
+     * @param string $title
+     */
+    public function setTitle($title) {
+        $this->title = $title;
     }
 
     /**

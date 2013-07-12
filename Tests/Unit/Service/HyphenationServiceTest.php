@@ -262,6 +262,11 @@ class Tx_Nkhyphenation_Tests_Unit_Service_HyphenationServiceTest
                        ->with($expectedParts[$i]);
         }
 
+        if (count($expectedParts) === 0) {
+            $hyphenator->expects($this->never())
+                       ->method('hyphenateWord');
+        }
+
         $hyphenator->_call(
                 'hyphenation',
                 $inputString

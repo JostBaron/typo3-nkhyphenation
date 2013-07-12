@@ -74,6 +74,15 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenationPatternsTest
     /**
      * @test
      */
+    public function titleCanBeSet() {
+        $title = 'This is a title.';
+        $this->hyphenationPatterns->setTitle($title);
+        $this->assertEquals($title, $this->hyphenationPatterns->getTitle());
+    }
+
+    /**
+     * @test
+     */
     public function specialCharactersCanBeSet() {
         $specialCharacters = 'öas|ſ«¢„€łł¶€ŧ←ø↓←ł¹²³';
         $this->hyphenationPatterns->setSpecialCharacters($specialCharacters);

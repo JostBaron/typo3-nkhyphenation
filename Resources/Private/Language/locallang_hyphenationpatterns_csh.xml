@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>CSH</type>
+		<description>Context Sensitive Help language labels for plugin belonging to extension 'nkhyphenation'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="title.description">
+                    The name of this pattern set. Only used to identify the
+                    record in the backend.
+                </label>
+			<label index="specialcharacters.description">
+                    By default, only A-Z, a-z, 0-9, -, @, the soft hyphen and
+                    the zero width joinder (U+200D) are considered to be the
+                    characters that can make up a word. You can add additional
+                    characters occuring in words here here. For example in
+                    german you might set this to 'äöüß' (without the quotes).
+                    This field is not trimmed, so watch your white spaces.
+                </label>
+			<label index="system_language.description">
+                    The language these hyphenation patterns are for. You can
+                    have multiple pattern sets for each language, but in that
+                    case it is undefined which one is chosen.
+                </label>
+			<label index="hyphen.description">
+                    The string to insert as a hyphen. This should usually be the
+                    HTML entity '&amp;amp;shy;', but you could need something else.
+                </label>
+			<label index="leftmin.description">
+                    The minimal number of characters in a word before the first
+                    hyphen might be set.
+                </label>
+			<label index="rightmin.description">
+                    The minimal number of characters in a word that must be left
+                    after the last hyphen is set.
+                </label>
+		</languageKey>
+	</data>
+</T3locallang>
