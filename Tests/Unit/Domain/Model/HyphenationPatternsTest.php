@@ -8,6 +8,10 @@
 class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenationPatternsTest
         extends Tx_Extbase_Tests_Unit_BaseTestCase {
 
+    /**
+     * The hyphenation patters object to test.
+     * @var Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
+     */
     protected $hyphenationPatterns;
 
     /**
@@ -65,6 +69,51 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenationPatternsTest
 
         $result = $this->hyphenationPatterns->_get('trie');
         $this->assertEquals($expectedResult, $result, 'Expected: ' . print_r($expectedResult, true) . ', actual: ' . print_r($result, true));
+    }
+
+    /**
+     * @test
+     */
+    public function specialCharactersCanBeSet() {
+        $specialCharacters = 'öas|ſ«¢„€łł¶€ŧ←ø↓←ł¹²³';
+        $this->hyphenationPatterns->setSpecialCharacters($specialCharacters);
+        $this->assertEquals($specialCharacters, $this->hyphenationPatterns->getSpecialCharacters());
+    }
+
+    /**
+     * @test
+     */
+    public function hyphenCanBeSet() {
+        $hyphen = '---x---';
+        $this->hyphenationPatterns->setHyphen($hyphen);
+        $this->assertEquals($hyphen, $this->hyphenationPatterns->getHyphen());
+    }
+
+    /**
+     * @test
+     */
+    public function leftminCanBeSet() {
+        $leftmin = 100;
+        $this->hyphenationPatterns->setLeftmin($leftmin);
+        $this->assertEquals($leftmin, $this->hyphenationPatterns->getLeftmin());
+    }
+
+    /**
+     * @test
+     */
+    public function rightminCanBeSet() {
+        $rightmin = 100;
+        $this->hyphenationPatterns->setRightmin($rightmin);
+        $this->assertEquals($rightmin, $this->hyphenationPatterns->getRightmin());
+    }
+
+    /**
+     * @test
+     */
+    public function systemLanguageCanBeSet() {
+        $systemLanguage = 100;
+        $this->hyphenationPatterns->setSystemLanguage($systemLanguage);
+        $this->assertEquals($systemLanguage, $this->hyphenationPatterns->getSystemLanguage());
     }
 }
 
