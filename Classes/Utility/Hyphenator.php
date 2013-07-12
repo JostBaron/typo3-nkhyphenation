@@ -65,7 +65,11 @@ class Tx_Nkhyphenation_Utility_Hyphenator {
         $part = '';
 
         for ($i = 1; $i < count($characters) - 1; $i++) {
-            if (($points[$i] % 2) === 1) {
+            if (   (($points[$i] % 2) === 1)
+                && ($this->patterns->getLeftmin() < $i)
+                && ($i < (count($characters) - $this->patterns->getRightmin()))
+               ) {
+
                 array_push($result, $part);
                 $part = $characters[$i];
             }

@@ -40,6 +40,8 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
         }
 
         $this->hyphenationPatterns->setHyphen($hyphen);
+        $this->hyphenationPatterns->setLeftmin(0);
+        $this->hyphenationPatterns->setRightmin(0);
 
         $hyphenator = $this->getAccessibleMock(
                 'Tx_Nkhyphenation_Utility_Hyphenator',
@@ -130,6 +132,92 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
                 '-',
                 'someword',
                 'so-meword'
+            ),
+        );
+    }
+
+    /**
+     * @test
+     * @dataProvider hyphenationRespectsMinimalCharactersDataProvider
+     * @return void
+     */
+    public function hyphenationRespectsMinimalCharacters(
+            $patterns,
+            $minLeft,
+            $minRight,
+            $word,
+            $expectedResult
+            ) {
+
+        foreach ($patterns as $pattern) {
+            $this->hyphenationPatterns->_call('insertPatternIntoTrie', $pattern);
+        }
+
+        $this->hyphenationPatterns->setHyphen('-');
+        $this->hyphenationPatterns->setLeftmin($minLeft);
+        $this->hyphenationPatterns->setRightmin($minRight);
+
+        $hyphenator = $this->getAccessibleMock(
+                'Tx_Nkhyphenation_Utility_Hyphenator',
+                array('dummy'),
+                array($this->hyphenationPatterns)
+        );
+
+        $result = $hyphenator->hyphenateWord($word);
+
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    public function hyphenationRespectsMinimalCharactersDataProvider() {
+        return array(
+            'break in middle of word' => array(
+                array('me5wo'),
+                2,
+                3,
+                'someword',
+                'some-word'
+            ),
+            'break before leftmin characters' => array(
+                array('so1me'),
+                3,
+                3,
+                'someword',
+                'someword'
+            ),
+            'break after less than rightmin characters are left' => array(
+                array('wo1rd'),
+                0,
+                3,
+                'someword',
+                'someword'
+            ),
+            'word split in middle' => array(
+                array('some5word'),
+                4,
+                4,
+                'someword',
+                'some-word'
+            ),
+            'word to short' => array(
+                array('some5word'),
+                4,
+                5,
+                'someword',
+                'someword'
+            ),
+            'break at leftmost possible position' => array(
+                array('so3me'),
+                2,
+                0,
+                'someword',
+                'so-meword'
+            ),
+            'break at rightmost possible position' => array(
+                array('wo5rd'),
+                0,
+                2,
+                'someword',
+                'somewo-rd'
             ),
         );
     }
@@ -229,6 +317,11 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
                 '',
                 'some' . $unicodeSoftHyphen . 'word',
                 array('some' . $unicodeSoftHyphen . 'word'),
+            ),
+            'multiple words separated by non-word-characters' => array(
+                '',
+                'word1,word2;word3ħword4',
+                array('word1', 'word2', 'word3', 'word4'),
             ),
         );
     }
