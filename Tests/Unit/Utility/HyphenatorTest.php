@@ -34,22 +34,19 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
             $inputString,
             $expectedResult) {
 
-        $hyphenator = $this->getAccessibleMock(
-                'Tx_Nkhyphenation_Utility_Hyphenator',
-                array('dummy'),
-                array(),
-                '',
-                false
-        );
-
         foreach ($patterns as $pattern) {
             $this->hyphenationPatterns->_call('insertPatternIntoTrie', $pattern);
         }
 
+        $hyphenator = $this->getAccessibleMock(
+                'Tx_Nkhyphenation_Utility_Hyphenator',
+                array('dummy'),
+                array($this->hyphenationPatterns)
+        );
+
         $result = $hyphenator->_call(
                 'hyphenateWord',
-                $inputString,
-                $this->hyphenationPatterns
+                $inputString
         );
 
         $this->assertEquals($expectedResult, $result);
@@ -138,14 +135,12 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
             $inputString,
             $expectedParts) {
 
-        $this->hyphenationPatterns->_set('specialCharacters', $specialCharacters);
+        $this->hyphenationPatterns->setSpecialCharacters($specialCharacters);
 
         $hyphenator = $this->getAccessibleMock(
                 'Tx_Nkhyphenation_Utility_Hyphenator',
                 array('hyphenateWord'),
-                array(),
-                '',
-                false
+                array($this->hyphenationPatterns)
         );
 
         for ($i = 0; $i < count($expectedParts); $i++) {
@@ -156,8 +151,7 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
 
         $hyphenator->_call(
                 'hyphenation',
-                $inputString,
-                $this->hyphenationPatterns
+                $inputString
         );
     }
 

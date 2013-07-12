@@ -11,55 +11,45 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
     extends Tx_Extbase_DomainObject_AbstractEntity {
 
     /**
-     * Path to the hyphenation pattern file.
-     * @var string
-     */
-    protected $patternfile;
-
-    /**
      * Trie of the hyphenation patterns.
      * @var array
      */
     protected $trie = array();
 
     /**
-     * Special characters that may be contained in a word.
+     * Additional characters that may occur in word. The characters a-z, A-Z,
+     * 0-9, @, - and \u200C, \u00AD are word characters by default. The
+     * characters given here are additional to them. In a german pattern set,
+     * this would probably be set to 'äöüß'.
      * @var string
      */
     protected $specialCharacters;
 
     /**
-     * Builds a trie from a jsHyphenator pattern file.
-     * @throws Exception
+     * The string to insert as hyphen.
+     * @var string
      */
-    public function buildTrie() {
-        if (!file_exists($this->patternfile)) {
-            throw new Exception('Pattern file \'' . $this->patternfile . '\' does not exist.', 'nkhyphenation-1373491906');
-        }
+    protected $hyphen;
 
-        $decodedPatternFile = json_decode(file_get_contents($this->patternfile), true);
+    /**
+     * Minimal number of characters in a word before a line break may be
+     * inserted.
+     * @var int
+     */
+    protected $leftmin;
 
-        if (!is_array($decodedPatternFile['patterns'])) {
-            throw new Exception('Pattern file \'' . $this->patternfile . '\' seems to be invalid.', 'nkhyphenation-1373491855');
-        }
+    /**
+     * Minimal number of characters in a word that must be left after a line
+     * break is inserted.
+     * @var int
+     */
+    protected $rightmin;
 
-        foreach ($decodedPatternFile['patterns'] as $patternSize => $patterns) {
-
-            // Check that lenght of $patterns is a multiple of $patternSize, so
-            // there are no partial patterns here.
-            if (0 !== (strlen($patterns) % intval($patternSize))) {
-                throw new Exception('The patterns of length ' . $patternSize .
-                                    ' don\'t have that length each in file \'' .
-                                    $this->patternfile . '\'', 'nkhyphenation-1373492349');
-            }
-
-            $singlePatterns = str_split($patterns, $patternSize);
-
-            foreach ($singlePatterns as $pattern) {
-                $this->insertPatternIntoTrie($pattern);
-            }
-        }
-    }
+    /**
+     * Reference to the system language that this patternset is for.
+     * @var int
+     */
+    protected $systemLanguage;
 
     /**
      * Inserts a pattern into the hyphenation trie.
@@ -94,12 +84,96 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
     }
 
     /**
+     * Empties the trie.
+     * @return void
+     */
+    public function resetTrie() {
+        $this->trie = array();
+    }
+
+    /**
      * Returns the special characters (the ones that do NOT make a word
      * boundary).
      * @return string
      */
     public function getSpecialCharacters() {
         return $this->specialCharacters;
+    }
+
+    /**
+     * Sets the special characters to use.
+     * @param string $specialCharacters
+     */
+    public function setSpecialCharacters($specialCharacters) {
+        $this->specialCharacters = $specialCharacters;
+    }
+
+    /**
+     * Returns the hyphen to use.
+     * @return string
+     */
+    public function getHyphen() {
+        return $this->hyphen;
+    }
+
+    /**
+     * Set the hyphen to use.
+     * @param string $hyphen
+     */
+    public function setHyphen($hyphen) {
+        $this->hyphen = $hyphen;
+    }
+
+    /**
+     * Returns the minimal number of characters in a word that must occur before
+     * a hyphen.
+     * @return int
+     */
+    public function getLeftmin() {
+        return $this->leftmin;
+    }
+
+    /**
+     * Sets the minimal number of characters in a word that must occur before a
+     * hyphen.
+     * @param int $leftmin
+     */
+    public function setLeftmin($leftmin) {
+        $this->leftmin = $leftmin;
+    }
+
+    /**
+     * Returns the minimal number of characters in a word that must occur after
+     * a hyphen.
+     * @return int
+     */
+    public function getRightmin() {
+        return $this->rightmin;
+    }
+
+    /**
+     * Sets the minimal number of characters in a word that must occur after a
+     * hyphen.
+     * @param int $rightmin
+     */
+    public function setRightmin($rightmin) {
+        $this->rightmin = $rightmin;
+    }
+
+    /**
+     * Returns the system language this patternset is for.
+     * @return int
+     */
+    public function getSystemLanguage() {
+        return $this->systemLanguage;
+    }
+
+    /**
+     * Sets the system language this patternset ist for.
+     * @param int $systemLanguage
+     */
+    public function setSystemLanguage($systemLanguage) {
+        $this->systemLanguage = $systemLanguage;
     }
 }
 
