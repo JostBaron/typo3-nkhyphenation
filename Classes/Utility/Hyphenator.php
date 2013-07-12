@@ -77,7 +77,7 @@ class Tx_Nkhyphenation_Utility_Hyphenator {
         // Push the last part.
         array_push($result, $part);
 
-        return implode('-', $result);
+        return implode($this->patterns->getHyphen(), $result);
     }
 
     /**

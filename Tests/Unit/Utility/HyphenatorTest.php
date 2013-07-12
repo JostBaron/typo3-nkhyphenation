@@ -31,6 +31,7 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
      */
     public function patternsAreCorrectlyAppliedToSingleWord(
             $patterns,
+            $hyphen,
             $inputString,
             $expectedResult) {
 
@@ -38,16 +39,15 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
             $this->hyphenationPatterns->_call('insertPatternIntoTrie', $pattern);
         }
 
+        $this->hyphenationPatterns->setHyphen($hyphen);
+
         $hyphenator = $this->getAccessibleMock(
                 'Tx_Nkhyphenation_Utility_Hyphenator',
                 array('dummy'),
                 array($this->hyphenationPatterns)
         );
 
-        $result = $hyphenator->_call(
-                'hyphenateWord',
-                $inputString
-        );
+        $result = $hyphenator->hyphenateWord($inputString);
 
         $this->assertEquals($expectedResult, $result);
     }
@@ -58,6 +58,7 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
                 array(
 
                 ),
+                '-',
                 'someword',
                 'someword'
             ),
@@ -65,6 +66,7 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
                 array(
                     'me1wo',
                 ),
+                '-',
                 'someword',
                 'some-word'
             ),
@@ -72,6 +74,7 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
                 array(
                     'me2wo',
                 ),
+                '-',
                 'someword',
                 'someword'
             ),
@@ -79,6 +82,7 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
                 array(
                     'me2woe',
                 ),
+                '-',
                 'someword',
                 'someword'
             ),
@@ -87,6 +91,7 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
                     'me2woe',
                     'ma3wo'
                 ),
+                '-',
                 'someword',
                 'someword'
             ),
@@ -95,6 +100,7 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
                     'o1me',
                     'wo3rd'
                 ),
+                '-',
                 'someword',
                 'so-mewo-rd'
             ),
@@ -103,6 +109,7 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
                     'o1me',
                     'o4mew'
                 ),
+                '-',
                 'someword',
                 'someword'
             ),
@@ -111,6 +118,7 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
                     'o2me',
                     'o3mew'
                 ),
+                '-',
                 'someword',
                 'so-meword'
             ),
@@ -119,10 +127,27 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenatorTest
                     'o2me',
                     'o3mew'
                 ),
+                '-',
                 'someword',
                 'so-meword'
             ),
         );
+    }
+
+    /**
+     * @test
+     */
+    public function hyphenateWordRespectsSetHyphen() {
+        $this->hyphenationPatterns->_call('insertPatternIntoTrie', 'me3w');
+        $this->hyphenationPatterns->setHyphen('-this-is-a-hyphen-');
+
+        $hyphenator = $this->getAccessibleMock(
+                'Tx_Nkhyphenation_Utility_Hyphenator',
+                array('dummy'),
+                array($this->hyphenationPatterns)
+        );
+
+        $this->assertEquals('some-this-is-a-hyphen-word', $hyphenator->hyphenateWord('someword'));
     }
 
     /**
