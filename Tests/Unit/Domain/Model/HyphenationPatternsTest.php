@@ -41,8 +41,8 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenationPatternsTest
             ),
         );
 
-        $result = $this->hyphenationPatterns->_get('trie');
-        $this->assertEquals($expectedResult, $result, 'Expected: ' . print_r($expectedResult, true) . ', actual: ' . print_r($result, true));
+        $this->assertEquals($expectedResult, $this->hyphenationPatterns->getTrie());
+        $this->assertEquals(serialize($expectedResult), $this->hyphenationPatterns->getSerializedTrie());
     }
 
     /**
@@ -67,8 +67,8 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenationPatternsTest
             ),
         );
 
-        $result = $this->hyphenationPatterns->_get('trie');
-        $this->assertEquals($expectedResult, $result, 'Expected: ' . print_r($expectedResult, true) . ', actual: ' . print_r($result, true));
+        $this->assertEquals($expectedResult, $this->hyphenationPatterns->getTrie());
+        $this->assertEquals(serialize($expectedResult), $this->hyphenationPatterns->getSerializedTrie());
     }
 
     /**
@@ -123,6 +123,23 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenationPatternsTest
         $systemLanguage = 100;
         $this->hyphenationPatterns->setSystemLanguage($systemLanguage);
         $this->assertEquals($systemLanguage, $this->hyphenationPatterns->getSystemLanguage());
+    }
+
+    /**
+     * @test
+     */
+    public function trieIsResetCorrectly() {
+
+        // Fill TRIE with some random data and assert it has been inserted
+        // to make sure this test is not futile.
+        $this->hyphenationPatterns->_call('insertPatternIntoTrie', 'ad2e_');
+        $this->assertNotEquals(array(), $this->hyphenationPatterns->getTrie());
+        $this->assertNotEquals(serialize(array()), $this->hyphenationPatterns->getSerializedTrie());
+
+        // Run the real test
+        $this->hyphenationPatterns->resetTrie();
+        $this->assertEquals(array(), $this->hyphenationPatterns->getTrie());
+        $this->assertEquals(serialize(array()), $this->hyphenationPatterns->getSerializedTrie());
     }
 }
 

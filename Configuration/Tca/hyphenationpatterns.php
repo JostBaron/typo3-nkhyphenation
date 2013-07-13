@@ -93,6 +93,12 @@ $TCA['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
                 'eval'    => 'required,trim,num,int'
             ),
         ),
+        'serialized_trie' => array(
+            'label'   => 'serialized_trie',
+            'config' => array(
+                'type'    => 'passthrough',
+            ),
+        ),
     ),
     'types' => array(
         0 => array(

@@ -17,12 +17,6 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
     protected $title;
 
     /**
-     * Trie of the hyphenation patterns.
-     * @var array
-     */
-    protected $trie = array();
-
-    /**
      * Additional characters that may occur in word. The characters a-z, A-Z,
      * 0-9, @, - and \u200C, \u00AD are word characters by default. The
      * characters given here are additional to them. In a german pattern set,
@@ -58,6 +52,18 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
     protected $systemLanguage;
 
     /**
+     * Trie of the hyphenation patterns.
+     * @var array
+     */
+    protected $trie = array();
+
+    /**
+     * The trie in serialized form for database storage.
+     * @var string
+     */
+    protected $serializedTrie;
+
+    /**
      * Inserts a pattern into the hyphenation trie.
      * @param string $pattern The pattern to insert.
      * @return void
@@ -83,6 +89,10 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
         foreach ($points as $point) {
             array_push($trie['points'], ($point === '') ? 0 : intval($point));
         }
+
+        // Update the serialized version of the TRIE. This is probably costly,
+        // but happens only if the patterns are changed.
+        $this->updateSerializedTrie();
     }
 
     /**
@@ -99,22 +109,6 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
      */
     public function setTitle($title) {
         $this->title = $title;
-    }
-
-    /**
-     * Returns the hyphenation-TRIE.
-     * @return array
-     */
-    public function getTrie() {
-        return $this->trie;
-    }
-
-    /**
-     * Empties the trie.
-     * @return void
-     */
-    public function resetTrie() {
-        $this->trie = array();
     }
 
     /**
@@ -200,6 +194,50 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
      */
     public function setSystemLanguage($systemLanguage) {
         $this->systemLanguage = $systemLanguage;
+    }
+
+    /**
+     * Returns the hyphenation-TRIE.
+     * @return array
+     */
+    public function getTrie() {
+        return $this->trie;
+    }
+
+    /**
+     * Empties the trie.
+     * @return void
+     */
+    public function resetTrie() {
+        $this->trie = array();
+        $this->updateSerializedTrie();
+    }
+
+    /**
+     * Returns the serialized TRIE. Should only be called by the T3 persistence
+     * manager.
+     * @return string
+     */
+    public function getSerializedTrie() {
+        return $this->serializedTrie;
+    }
+
+    /**
+     * Sets the serialized TRIE. Should only be called by the T3 persistence
+     * manager.
+     * @param string $serializedTrie
+     */
+    public function setSerializedTrie($serializedTrie) {
+        $this->serializedTrie = $serializedTrie;
+        $this->trie = unserialize($this->serializedTrie);
+    }
+
+    /**
+     * Updates the serialized TRIE with the data from the unserialized one.
+     * @return void
+     */
+    public function updateSerializedTrie() {
+        $this->serializedTrie = serialize($this->trie);
     }
 }
 
