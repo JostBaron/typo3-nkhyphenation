@@ -55,7 +55,7 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
      * Trie of the hyphenation patterns.
      * @var array
      */
-    protected $trie = array();
+    protected $trie;
 
     /**
      * The trie in serialized form for database storage.
@@ -210,7 +210,6 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
      */
     public function resetTrie() {
         $this->trie = array();
-        $this->updateSerializedTrie();
     }
 
     /**
@@ -219,7 +218,7 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
      * @return string
      */
     public function getSerializedTrie() {
-        return $this->serializedTrie;
+        return serialize($this->trie);
     }
 
     /**
@@ -228,16 +227,7 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
      * @param string $serializedTrie
      */
     public function setSerializedTrie($serializedTrie) {
-        $this->serializedTrie = $serializedTrie;
-        $this->trie = unserialize($this->serializedTrie);
-    }
-
-    /**
-     * Updates the serialized TRIE with the data from the unserialized one.
-     * @return void
-     */
-    public function updateSerializedTrie() {
-        $this->serializedTrie = serialize($this->trie);
+        $this->trie = unserialize($serializedTrie);
     }
 }
 

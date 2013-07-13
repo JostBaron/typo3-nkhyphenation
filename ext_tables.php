@@ -27,4 +27,22 @@ $TCA['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
 t3lib_extMgm::addLLrefForTCAdescr(
         'tx_nkhyphenation_domain_model_hyphenationpatterns', 'EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_hyphenationpatterns_csh.xml');
 
+// Register backend module.
+if (TYPO3_MODE === 'BE') {
+    Tx_Extbase_Utility_Extension::registerModule(
+        $_EXTKEY,
+        'tools',        // Main area
+        'hyphenation',  // Name of the module
+        '',             // Position of the module
+        array(          // Allowed controller action combinations
+            'HyphenationPatterns' => 'list,show,edit,update,new,create'
+        ),
+        array(          // Additional configuration
+            'access'    => 'user,group',
+            'icon'      => 'EXT:' . $_EXTKEY . '/ext_icon.gif',
+            'labels'    => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_backend.xml',
+        )
+    );
+}
+
 ?>
