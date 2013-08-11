@@ -1,40 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.0">
-    <file source-language="en" datatype="plaintext" original="messages" date="2013-07-12T19:55:32Z" product-name="nkhyphenation">
+    <file source-language="en" datatype="plaintext" original="messages" date="2013-07-14T14:34:45Z" product-name="nkhyphenation">
         <header/>
         <body>
-            <trans-unit id="hyphenationpatterns_recordlabel" xml:space="preserve">
-                <source>Hyphenation Patterns</source>
+            <trans-unit id="hyphenationpatterns_field_not_set" xml:space="preserve">
+                <source>[not set]</source>
             </trans-unit>
-
             <trans-unit id="hyphenationpatterns_title_label" xml:space="preserve">
                 <source>Name of pattern set</source>
             </trans-unit>
-
             <trans-unit id="hyphenationpatterns_specialcharacters_label" xml:space="preserve">
                 <source>Special characters</source>
             </trans-unit>
-
             <trans-unit id="hyphenationpatterns_hyphen_label" xml:space="preserve">
                 <source>String to insert as hyphen</source>
             </trans-unit>
-
             <trans-unit id="hyphenationpatterns_leftmin_label" xml:space="preserve">
                 <source>Minimal number of characters in a word before the first hyphen</source>
             </trans-unit>
             <trans-unit id="hyphenationpatterns_rightmin_label" xml:space="preserve">
                 <source>Minimal number of characters in a word after the last hyphen</source>
-            </trans-unit>
-
-            <trans-unit id="hyphenationpatterns_patternfile_label" xml:space="preserve">
-                <source>File containing hyphenation patterns</source>
-            </trans-unit>
-
-            <trans-unit id="hyphenationpatterns_patternfileformat_label" xml:space="preserve">
-                <source>Format of the pattern file</source>
-            </trans-unit>
-            <trans-unit id="hyphenationpatterns_patternfileformat_hyphenatorjs_itemtext" xml:space="preserve">
-                <source>Hyphenator.js (since version 2.0.0)</source>
             </trans-unit>
         </body>
     </file>

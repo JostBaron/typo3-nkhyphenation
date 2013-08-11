@@ -16,6 +16,8 @@ CREATE TABLE tx_nkhyphenation_domain_model_hyphenationpatterns (
     hyphen varchar(255) DEFAULT '&shy;' NOT NULL,
     leftmin int(11) DEFAULT '2' NOT NULL,
     rightmin int(11) DEFAULT '2' NOT NULL,
+    patternfile varchar(255) DEFAULT '' NOT NULL,
+    patternfileformat varchar(255) DEFAULT '' NOT NULL,
     serialized_trie blob,
 
     PRIMARY KEY (uid),

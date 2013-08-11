@@ -64,38 +64,6 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
     protected $serializedTrie;
 
     /**
-     * Inserts a pattern into the hyphenation trie.
-     * @param string $pattern The pattern to insert.
-     * @return void
-     * @license The code of this method is heavily inspired (but not a simple
-     * port) of a code piece from Hyphenator.js. The code there is in turn a
-     * modified version of code from hypher.js by Bram Stein, 2011.
-     */
-    protected function insertPatternIntoTrie($pattern) {
-
-        $characters = str_split(preg_replace('/\d/', '', $pattern));
-        $points = preg_split('/[\D]/', $pattern);
-
-        $trie =& $this->trie;
-        foreach ($characters as $character) {
-            if (!array_key_exists($character, $trie)) {
-                $trie[$character] = array();
-            }
-
-            $trie =& $trie[$character];
-        }
-
-        $trie['points'] = array();
-        foreach ($points as $point) {
-            array_push($trie['points'], ($point === '') ? 0 : intval($point));
-        }
-
-        // Update the serialized version of the TRIE. This is probably costly,
-        // but happens only if the patterns are changed.
-        $this->updateSerializedTrie();
-    }
-
-    /**
      * Returns the title of the record.
      * @return string
      */

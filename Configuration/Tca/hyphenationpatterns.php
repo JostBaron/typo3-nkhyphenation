@@ -99,10 +99,36 @@ $TCA['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
                 'type'    => 'passthrough',
             ),
         ),
+        'patternfile' => array(
+            'label'   => $ll . 'hyphenationpatterns_patternfile_label',
+            'exclude' => 1,
+            'config' => array(
+                'type' => 'group',
+                'internal_type' => 'file',
+                'allowed' => 'js,json',
+                'size' => 1,
+                'maxitems' => 1,
+                'uploadfolder' => 'uploads/tx_nkhyphenation',
+                'show_thumbs' => 0,
+                'appearance' => array(
+                    'elementBrowserType' => 'file',
+                ),
+            ),
+        ),
+        'patternfileformat' => array(
+            'label'   => $ll . 'hyphenationpatterns_patternfileformat_label',
+            'exclude' => 1,
+            'config'  => array(
+                'type' => 'select',
+                'items' => array(
+                    array($ll . 'hyphenationpatterns_patternfileformat_hyphenatorjs_itemtext', 'hyphenatorjs'),
+                )
+            ),
+        ),
     ),
     'types' => array(
         0 => array(
-            'showitem' => 'title,system_language,specialcharacters,hyphen,leftmin,rightmin',
+            'showitem' => 'title,system_language,specialcharacters,hyphen,leftmin,rightmin,patternfile,patternfileformat',
         ),
     ),
 );

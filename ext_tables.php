@@ -11,7 +11,6 @@ $TCA['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
         'tstamp'    => 'tstamp',
         'crdate'    => 'crdate',
         'cruser_id' => 'cruser_id',
-        'languageField' => 'system_language',
         'dividers2tabs' => 1,
         'delete' => 'deleted',
         'enablecolumns' => array(
