@@ -34,7 +34,7 @@
                 <source>Format of the pattern file</source>
             </trans-unit>
             <trans-unit id="hyphenationpatterns_patternfileformat_hyphenatorjs_itemtext" xml:space="preserve">
-                <source>Hyphenator.js (since version 2.0.0)</source>
+                <source>Hyphenator.js (only files from version 2.0.0 or newer)</source>
             </trans-unit>
         </body>
     </file>
