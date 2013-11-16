@@ -97,7 +97,7 @@ class HyphenationServiceTest
             'multiple non-matching patterns' => array(
                 array(
                     'me2woe',
-                    'ma3wo'
+                    'ma3wo',
                 ),
                 '-',
                 'someword',
@@ -106,7 +106,7 @@ class HyphenationServiceTest
             'multiple matching patterns' => array(
                 array(
                     'o1me',
-                    'wo3rd'
+                    'wo3rd',
                 ),
                 '-',
                 'someword',
@@ -115,7 +115,7 @@ class HyphenationServiceTest
             'multiple matching patterns, overriding each other, highest level is even' => array(
                 array(
                     'o1me',
-                    'o4mew'
+                    'o4mew',
                 ),
                 '-',
                 'someword',
@@ -124,16 +124,49 @@ class HyphenationServiceTest
             'multiple matching patterns, overriding each other, highest level is odd' => array(
                 array(
                     'o2me',
-                    'o3mew'
+                    'o3mew',
                 ),
                 '-',
                 'someword',
                 'so-meword'
             ),
-            'multiple matching patterns, overriding each other, highest level is odd' => array(
+            'Pattern with splitting point at end' => array(
                 array(
-                    'o2me',
-                    'o3mew'
+                    'me1',
+                ),
+                '-',
+                'someword',
+                'some-word'
+            ),
+            'Pattern with splitting point at start' => array(
+                array(
+                    '9me',
+                ),
+                '-',
+                'someword',
+                'so-meword'
+            ),
+            'Pattern with multiple splitting points' => array(
+                array(
+                    '9me1',
+                ),
+                '-',
+                'someword',
+                'so-me-word'
+            ),
+            'Multiple patterns with multiple splitting points, no override' => array(
+                array(
+                    '9me1',
+                    'ew5o',
+                ),
+                '-',
+                'someword',
+                'so-me-w-ord'
+            ),
+            'Multiple patterns with multiple splitting points, with override' => array(
+                array(
+                    '9me1',
+                    'e2wo',
                 ),
                 '-',
                 'someword',

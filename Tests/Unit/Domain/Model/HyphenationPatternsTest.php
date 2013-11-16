@@ -76,6 +76,60 @@ class HyphenationPatternsTest
     /**
      * @test
      */
+    public function splittingPointAtStart() {
+        $this->hyphenationPatterns->_call('insertPatternIntoTrie', '9ad');
+
+        $expectedResult = array(
+            'a' => array(
+                'd' => array(
+                    'points' => array(9, 0, 0)
+                ),
+            ),
+        );
+
+        $this->assertEquals($expectedResult, $this->hyphenationPatterns->getTrie());
+        $this->assertEquals(serialize($expectedResult), $this->hyphenationPatterns->getSerializedTrie());
+    }
+
+    /**
+     * @test
+     */
+    public function splittingPointAtEnd() {
+        $this->hyphenationPatterns->_call('insertPatternIntoTrie', 'ad1');
+
+        $expectedResult = array(
+            'a' => array(
+                'd' => array(
+                    'points' => array(0, 0, 1)
+                ),
+            ),
+        );
+
+        $this->assertEquals($expectedResult, $this->hyphenationPatterns->getTrie());
+        $this->assertEquals(serialize($expectedResult), $this->hyphenationPatterns->getSerializedTrie());
+    }
+    
+    /**
+     * @test
+     */
+    public function multipleSplittingPoints() {
+        $this->hyphenationPatterns->_call('insertPatternIntoTrie', 'a3d1');
+
+        $expectedResult = array(
+            'a' => array(
+                'd' => array(
+                    'points' => array(0, 3, 1)
+                ),
+            ),
+        );
+
+        $this->assertEquals($expectedResult, $this->hyphenationPatterns->getTrie());
+        $this->assertEquals(serialize($expectedResult), $this->hyphenationPatterns->getSerializedTrie());
+    }
+
+    /**
+     * @test
+     */
     public function titleCanBeSet() {
         $title = 'This is a title.';
         $this->hyphenationPatterns->setTitle($title);
