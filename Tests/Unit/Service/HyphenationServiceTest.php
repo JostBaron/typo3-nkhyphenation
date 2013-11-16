@@ -24,6 +24,9 @@ class Tx_Nkhyphenation_Tests_Unit_Service_HyphenationServiceTest
         );
     }
 
+
+
+
     /**
      * @test
      * @dataProvider patternsAreCorrectlyAppliedToSingleWordDataProvider
@@ -33,7 +36,8 @@ class Tx_Nkhyphenation_Tests_Unit_Service_HyphenationServiceTest
             $patterns,
             $hyphen,
             $inputString,
-            $expectedResult) {
+            $expectedResult
+        ) {
 
         foreach ($patterns as $pattern) {
             $this->hyphenationPatterns->_call('insertPatternIntoTrie', $pattern);
@@ -222,6 +226,9 @@ class Tx_Nkhyphenation_Tests_Unit_Service_HyphenationServiceTest
         );
     }
 
+
+
+
     /**
      * @test
      */
@@ -237,6 +244,9 @@ class Tx_Nkhyphenation_Tests_Unit_Service_HyphenationServiceTest
 
         $this->assertEquals('some-this-is-a-hyphen-word', $hyphenator->hyphenateWord('someword'));
     }
+
+
+
 
     /**
      * @test
@@ -331,5 +341,3 @@ class Tx_Nkhyphenation_Tests_Unit_Service_HyphenationServiceTest
         );
     }
 }
-
-?>

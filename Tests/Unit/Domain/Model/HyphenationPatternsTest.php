@@ -35,7 +35,7 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenationPatternsTest
             'a' => array(
                 'd' => array(
                     '_' => array(
-                        'points' => [0, 4, 0, 0],
+                        'points' => array(0, 4, 0, 0),
                     ),
                 ),
             ),
@@ -56,11 +56,11 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenationPatternsTest
             'a' => array(
                 'd' => array(
                     '_' => array(
-                        'points' => [0, 4, 0, 0],
+                        'points' => array(0, 4, 0, 0),
                     ),
                     'e' => array(
                         '_' => array(
-                            'points' => [0, 0, 2, 0, 0],
+                            'points' => array(0, 0, 2, 0, 0),
                         ),
                     ),
                 ),
@@ -142,5 +142,3 @@ class Tx_Nkhyphenation_Tests_Unit_Domain_Model_HyphenationPatternsTest
         $this->assertEquals(serialize(array()), $this->hyphenationPatterns->getSerializedTrie());
     }
 }
-
-?>

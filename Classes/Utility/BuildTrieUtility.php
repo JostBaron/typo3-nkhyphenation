@@ -42,36 +42,4 @@ class Tx_Nkhyphenation_Utility_BuildTrieUtility {
 
         return $result;
     }
-
-    /**
-     * Inserts a pattern into a hyphenation trie.
-     * @param array $trie The trie to insert the pattern into.
-     * @param string $pattern The pattern to insert.
-     * @return void
-     * @license The code of this method is heavily inspired (but not simply
-     * ported) by a code piece from Hyphenator.js. The code there is in turn a
-     * modified version of code from hypher.js by Bram Stein, 2011.
-     */
-    protected static function insertPatternIntoTrie(&$trie, $pattern) {
-
-        $characters = str_split(preg_replace('/\d/', '', $pattern));
-        $points = preg_split('/[\D]/', $pattern);
-
-        $currentTrie = $trie;
-
-        foreach ($characters as $character) {
-            if (!array_key_exists($character, $trie)) {
-                $currentTrie[$character] = array();
-            }
-
-            $currentTrie =& $currentTrie[$character];
-        }
-
-        $currentTrie['points'] = array();
-        foreach ($points as $point) {
-            array_push($currentTrie['points'], ($point === '') ? 0 : intval($point));
-        }
-    }
 }
-
-?>

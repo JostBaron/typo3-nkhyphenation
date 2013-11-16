@@ -99,14 +99,14 @@ class Tx_Nkhyphenation_Service_HyphenationService {
         $unicodeWordCharacters = json_decode('"\u200C\u00AD"');
         $wordSplittingRegex = '/([' . 'a-zA-Z0-9@\-' . $this->patterns->getSpecialCharacters() . $unicodeWordCharacters . ']+)/u';
 
+        $hypenationServiceInstance = $this;
+        
         preg_replace_callback(
                 $wordSplittingRegex,
-                function($matches) {
-                    return $this->hyphenateWord($matches[1]);
+                function($matches) use ($hypenationServiceInstance) {
+                    return $hypenationServiceInstance->hyphenateWord($matches[1]);
                 },
                 $text
         );
     }
 }
-
-?>
