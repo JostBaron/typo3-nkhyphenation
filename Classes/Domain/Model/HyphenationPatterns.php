@@ -31,7 +31,7 @@ class HyphenationPatterns
      * The string to insert as hyphen.
      * @var string
      */
-    protected $hyphen;
+    protected $hyphen = '&shy;';
 
     /**
      * Minimal number of characters in a word before a line break may be
@@ -237,7 +237,15 @@ class HyphenationPatterns
      * Fill this pattern-object from a patternProvider.
      * @param \Netzkoenig\Nkhyphenation\Utility\AbstractPatternProvider $patternProvider
      */
-    public function insertPatterns($patternProvider) {
+    public function addPatterns($patternProvider) {
         
+        foreach ($patternProvider->getPatternList() as $pattern) {
+            $this->insertPatternIntoTrie($pattern);
+        }
+        
+        $this->setLeftmin($patternProvider->getMinCharactersBeforeFirstHyphen());
+        $this->setRightmin($patternProvider->getMinCharactersAfterLastHyphen());
+        
+        $this->setSpecialCharacters($patternProvider->getWordCharacterList());
     }
 }
