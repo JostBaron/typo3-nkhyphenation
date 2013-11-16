@@ -58,9 +58,9 @@ $TCA['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
                 'eval'    => 'trim',
             ),
         ),
-        'specialcharacters' => array(
+        'wordcharacters' => array(
             'exclude' => 1,
-            'label'   => $ll . 'hyphenationpatterns_specialcharacters_label',
+            'label'   => $ll . 'hyphenationpatterns_wordcharacters_label',
             'config' => array(
                 'type'    => 'input',
                 'default' => '',
@@ -128,7 +128,7 @@ $TCA['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
     ),
     'types' => array(
         0 => array(
-            'showitem' => 'title,system_language,specialcharacters,hyphen,leftmin,rightmin,patternfile,patternfileformat',
+            'showitem' => 'title,system_language,wordcharacters,hyphen,leftmin,rightmin,patternfile,patternfileformat',
         ),
     ),
 );

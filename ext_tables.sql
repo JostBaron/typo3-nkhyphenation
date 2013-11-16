@@ -12,7 +12,7 @@ CREATE TABLE tx_nkhyphenation_domain_model_hyphenationpatterns (
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 
     title tinytext,
-    specialcharacters tinytext,
+    wordcharacters tinytext,
     hyphen varchar(255) DEFAULT '&shy;' NOT NULL,
     leftmin int(11) DEFAULT '2' NOT NULL,
     rightmin int(11) DEFAULT '2' NOT NULL,

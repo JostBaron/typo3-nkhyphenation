@@ -79,8 +79,7 @@ class HyphenationPatterns
     }
 
     /**
-     * Returns the special characters (the ones that do NOT make a word
-     * boundary).
+     * Returns the word characters (the ones that define what a word is).
      * @return array
      */
     public function getWordCharacters() {
@@ -88,7 +87,7 @@ class HyphenationPatterns
     }
 
     /**
-     * Sets the special characters to use.
+     * Sets the word characters to use.
      * @param mixed $wordCharacters
      */
     public function setWordCharacters($wordCharacters) {

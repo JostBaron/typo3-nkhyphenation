@@ -140,9 +140,9 @@ class HyphenationPatternsTest
      * @test
      */
     public function wordCharactersCanBeSet() {
-        $specialCharacters = 'öas|ſ«¢„€łł¶€ŧ←ø↓←ł¹²³';
-        $this->hyphenationPatterns->setWordCharacters($specialCharacters);
-        $this->assertEquals($specialCharacters, join('', $this->hyphenationPatterns->getWordCharacters()));
+        $wordCharacters = 'öas|ſ«¢„€łł¶€ŧ←ø↓←ł¹²³';
+        $this->hyphenationPatterns->setWordCharacters($wordCharacters);
+        $this->assertEquals($wordCharacters, join('', $this->hyphenationPatterns->getWordCharacters()));
     }
 
     /**

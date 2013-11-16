@@ -9,14 +9,15 @@
                     record in the backend.
                 </source>
             </trans-unit>
-            <trans-unit id="specialcharacters.description" xml:space="preserve">
+            <trans-unit id="wordcharacters.description" xml:space="preserve">
                 <source>
-                    By default, only A-Z, a-z, 0-9, -, @, the soft hyphen and
-                    the zero width joinder (U+200D) are considered to be the
-                    characters that can make up a word. You can add additional
-                    characters occuring in words here here. For example in
-                    german you might set this to 'äöüß' (without the quotes).
-                    This field is not trimmed, so watch your white spaces.
+                    By default, only the soft hyphen and the zero width joiner
+                    (U+200D) are considered to be the characters that can make
+                    up a word. You can add additional characters occuring in
+                    words here here. For example in german you might set this to
+                    the characters a to z, A to Z  and the characters Ä, Ö, Ü,
+                    ä, ö, ü and ß. This field is not trimmed, so watch your
+                    white spaces.
                 </source>
             </trans-unit>
             <trans-unit id="system_language.description" xml:space="preserve">

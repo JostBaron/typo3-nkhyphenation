@@ -9,8 +9,8 @@
             <trans-unit id="hyphenationpatterns_title_label" xml:space="preserve">
                 <source>Name of pattern set</source>
             </trans-unit>
-            <trans-unit id="hyphenationpatterns_specialcharacters_label" xml:space="preserve">
-                <source>Special characters</source>
+            <trans-unit id="hyphenationpatterns_wordcharacters_label" xml:space="preserve">
+                <source>Word characters</source>
             </trans-unit>
             <trans-unit id="hyphenationpatterns_hyphen_label" xml:space="preserve">
                 <source>String to insert as hyphen</source>
