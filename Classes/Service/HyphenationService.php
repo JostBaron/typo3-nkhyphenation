@@ -1,11 +1,13 @@
 <?php
 
+namespace Netzkoenig\Nkhyphenation\Service;
+
 /**
  * A hyphenator for a patternset. Once constructed, it allows to hyphenate
  * words and texts as defined by the given pattern set.
  * @author Jost Baron <j.baron@netzkoenig.de>
  */
-class Tx_Nkhyphenation_Service_HyphenationService {
+class HyphenationService {
 
     /**
      * The patterns to use.
@@ -15,7 +17,7 @@ class Tx_Nkhyphenation_Service_HyphenationService {
 
     /**
      * Builds a new hyphenator with the given patterns.
-     * @param Tx_Nkhyphenation_Domain_Model_HyphenationPatterns $patterns
+     * @param \Netzkoenig\Nkhyphenation\Domain\Model\HyphenationPatterns $patterns
      * The patterns to use.
      */
     public function __construct($patterns) {
@@ -39,12 +41,13 @@ class Tx_Nkhyphenation_Service_HyphenationService {
 
             // Start from the root of the TRIE
             $currentTrieNode = $this->patterns->getTrie();
+            
             for ($j = $i; $j < count($characters); $j++) {
 
                 // The character currently inspected
                 $character = $characters[$j];
 
-                // Check if we can walk down the trie fourther with the
+                // Check if we can walk down the trie further with the
                 // next letter. If not, break the loop.
                 if (!array_key_exists($character, $currentTrieNode)) {
                     break;

@@ -1,21 +1,20 @@
 <?php
 
+namespace Netzkoenig\Nkhyphenation\Utility;
+
 /**
- * Description of Tx_Nkhyphenation_Utility_BuildTrieUtility
+ * Description of \Netzkoenig\Nkhyphenation\Utility\BuildTrieUtility
  *
  * @author Jost Baron <j.baron@netzkoenig.de>
  */
-class Tx_Nkhyphenation_Utility_BuildTrieUtility {
+class BuildTrieUtility {
 
-    public static function buildTrieFromHyphenatorJsFile($filename) {
-        error_log('Filename: ' . $filename);
-
-        $filecontent = file_get_contents($filename);
-        $filecontent = preg_replace('/^Hyphenator\.languages[^=]+=/', '', $filecontent);
-
-        $patterns = json_decode($filecontent);
-
-        error_log('File content: ' . print_r($patterns, true));
+    /**
+     * Builds a trie from a Hyphenator.js file.
+     * @param string $filecontent The content of the file.
+     * @return array The trie.
+     */
+    public static function buildTrieFromHyphenatorJsFile($filecontent) {
 
         $result = array();
         if (isset($patterns['leftmin'])) {

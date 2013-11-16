@@ -1,12 +1,14 @@
 <?php
 
+namespace Netzkoenig\Nkhyphenation\Tests\Unit\Service;
+
 /**
  * Unit tests for the class Hyphenator.
  *
  * @author Jost Baron <j.baron@netzkoenig.de>
  */
-class Tx_Nkhyphenation_Tests_Unit_Service_HyphenationServiceTest
-        extends Tx_Extbase_Tests_Unit_BaseTestCase {
+class HyphenationServiceTest
+        extends \TYPO3\CMS\Extbase\Tests\Unit\BaseTestCase {
 
     /**
      * Used to build the pattern trie.
@@ -19,7 +21,7 @@ class Tx_Nkhyphenation_Tests_Unit_Service_HyphenationServiceTest
      */
     protected function setUp() {
         $this->hyphenationPatterns = $this->getAccessibleMock(
-                'Tx_Nkhyphenation_Domain_Model_HyphenationPatterns',
+                'Netzkoenig\\Nkhyphenation\\Domain\\Model\\HyphenationPatterns',
                 array('dummy')
         );
     }
@@ -48,7 +50,7 @@ class Tx_Nkhyphenation_Tests_Unit_Service_HyphenationServiceTest
         $this->hyphenationPatterns->setRightmin(0);
 
         $hyphenator = $this->getAccessibleMock(
-                'Tx_Nkhyphenation_Service_HyphenationService',
+                'Netzkoenig\\Nkhyphenation\\Service\\HyphenationService',
                 array('dummy'),
                 array($this->hyphenationPatterns)
         );
@@ -162,7 +164,7 @@ class Tx_Nkhyphenation_Tests_Unit_Service_HyphenationServiceTest
         $this->hyphenationPatterns->setRightmin($minRight);
 
         $hyphenator = $this->getAccessibleMock(
-                'Tx_Nkhyphenation_Service_HyphenationService',
+                'Netzkoenig\\Nkhyphenation\\Service\\HyphenationService',
                 array('dummy'),
                 array($this->hyphenationPatterns)
         );
@@ -237,7 +239,7 @@ class Tx_Nkhyphenation_Tests_Unit_Service_HyphenationServiceTest
         $this->hyphenationPatterns->setHyphen('-this-is-a-hyphen-');
 
         $hyphenator = $this->getAccessibleMock(
-                'Tx_Nkhyphenation_Service_HyphenationService',
+                'Netzkoenig\\Nkhyphenation\\Service\\HyphenationService',
                 array('dummy'),
                 array($this->hyphenationPatterns)
         );
@@ -261,7 +263,7 @@ class Tx_Nkhyphenation_Tests_Unit_Service_HyphenationServiceTest
         $this->hyphenationPatterns->setSpecialCharacters($specialCharacters);
 
         $hyphenator = $this->getAccessibleMock(
-                'Tx_Nkhyphenation_Service_HyphenationService',
+                'Netzkoenig\\Nkhyphenation\\Service\\HyphenationService',
                 array('hyphenateWord'),
                 array($this->hyphenationPatterns)
         );

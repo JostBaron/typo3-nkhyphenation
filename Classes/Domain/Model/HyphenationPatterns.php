@@ -1,5 +1,7 @@
 <?php
 
+namespace Netzkoenig\Nkhyphenation\Domain\Model;
+
 /**
  * Contains a set of hyphenation patterns. The patterns are stored in a file,
  * but are also stored as serialized trie in the database, in order to make
@@ -7,8 +9,8 @@
  *
  * @author Jost Baron <j.baron@netzkoenig.de>
  */
-class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
-    extends Tx_Extbase_DomainObject_AbstractEntity {
+class HyphenationPatterns
+    extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
     /**
      * Title of this pattern set.
@@ -55,7 +57,7 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
      * Trie of the hyphenation patterns.
      * @var array
      */
-    protected $trie;
+    protected $trie = array();
 
     /**
      * The trie in serialized form for database storage.
@@ -168,7 +170,7 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
      * Returns the hyphenation-TRIE.
      * @return array
      */
-    public function getTrie() {
+    public function getTrie() {        
         return $this->trie;
     }
 
@@ -200,7 +202,6 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
 
     /**
      * Inserts a pattern into a hyphenation trie.
-     * @param array $trie The trie to insert the pattern into.
      * @param string $pattern The pattern to insert.
      * @return void
      * @license The code of this method is heavily inspired (but not simply
@@ -208,10 +209,14 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
      * modified version of code from hypher.js by Bram Stein, 2011.
      */
     public function insertPatternIntoTrie($pattern) {
-
+        
         $characters = str_split(preg_replace('/\d/', '', $pattern));
         $points = preg_split('/[\D]/', $pattern);
 
+        if (!isset($this->trie)) {
+            $this->trie = array();
+        }
+        
         $currentTrie =& $this->trie;
 
         foreach ($characters as $character) {
@@ -226,5 +231,13 @@ class Tx_Nkhyphenation_Domain_Model_HyphenationPatterns
         foreach ($points as $point) {
             array_push($currentTrie['points'], ($point === '') ? 0 : intval($point));
         }
+    }
+    
+    /**
+     * Fill this pattern-object from a patternProvider.
+     * @param \Netzkoenig\Nkhyphenation\Utility\AbstractPatternProvider $patternProvider
+     */
+    public function insertPatterns($patternProvider) {
+        
     }
 }

@@ -1,20 +1,20 @@
 <?php
 
+namespace Netzkoenig\Nkhyphenation\Domain\Repository;
+
 /**
  * Repository for hyphenation patterns.
  *
  * @author Jost Baron <j.baron@netzkoenig.de>
  */
-class Tx_Nkhyphenation_Domain_Repository_HyphenationPatternsRepository
+class HyphenationPatternsRepository
         extends Tx_Extbase_Persistence_Repository {
 
     public function initializeObject() {
-        $querySettings = $this->objectManager->create('Tx_Extbase_Persistence_Typo3QuerySettings');
+        $querySettings = $this->objectManager->create('TYPO3\\CMS\\Extbase\\Persistence\\Typo3QuerySettings');
         $querySettings->setRespectStoragePage(FALSE);
         $querySettings->setRespectSysLanguage(FALSE);
         $this->setDefaultQuerySettings($querySettings);
     }
 
 }
-
-?>

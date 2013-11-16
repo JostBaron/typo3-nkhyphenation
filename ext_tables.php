@@ -28,7 +28,7 @@ t3lib_extMgm::addLLrefForTCAdescr(
 
 // Register backend module.
 if (TYPO3_MODE === 'BE') {
-    Tx_Extbase_Utility_Extension::registerModule(
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
         $_EXTKEY,
         'tools',        // Main area
         'hyphenation',  // Name of the module
@@ -43,5 +43,3 @@ if (TYPO3_MODE === 'BE') {
         )
     );
 }
-
-?>
