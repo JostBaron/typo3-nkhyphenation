@@ -34,7 +34,7 @@ class HyphenationService {
      */
     public function hyphenateWord($word) {
 
-        $characters = str_split(strtolower('_' . $word . '_'));
+        $characters = preg_split('//u', mb_strtolower('_' . $word . '_', 'UTF-8'), -1, PREG_SPLIT_NO_EMPTY);
         $points = array_fill(0, count($characters),  0);
 
         for ($i = 0; $i < count($characters); $i++) {
