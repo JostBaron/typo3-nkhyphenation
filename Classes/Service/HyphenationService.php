@@ -99,8 +99,12 @@ class HyphenationService {
 
         // Characters that are part of a word: \u200C is a zero-width space,
         // \u00AD is the soft-hyphen &shy;
-        $unicodeWordCharacters = json_decode('"\u200C\u00AD"');
-        $wordSplittingRegex = '/([' . 'a-zA-Z0-9@\-' . $this->patterns->getSpecialCharacters() . $unicodeWordCharacters . ']+)/u';
+        $unicodeWordCharacters = preg_split('//u', json_decode('"\u200C\u00AD"'), -1, PREG_SPLIT_NO_EMPTY);
+        
+        $wordCharacters = $this->patterns->getWordCharacters();
+        $wordCharacters = array_merge($wordCharacters, $unicodeWordCharacters);
+
+        $wordSplittingRegex = '/((?:' . implode('|', $wordCharacters) . ')+)/u';
 
         $hypenationServiceInstance = $this;
         

@@ -19,13 +19,10 @@ class HyphenationPatterns
     protected $title;
 
     /**
-     * Additional characters that may occur in word. The characters a-z, A-Z,
-     * 0-9, @, - and \u200C, \u00AD are word characters by default. The
-     * characters given here are additional to them. In a german pattern set,
-     * this would probably be set to 'äöüß'.
-     * @var string
+     * Characters that may make up a word in this language.
+     * @var array
      */
-    protected $specialCharacters;
+    protected $wordCharacters;
 
     /**
      * The string to insert as hyphen.
@@ -84,18 +81,31 @@ class HyphenationPatterns
     /**
      * Returns the special characters (the ones that do NOT make a word
      * boundary).
-     * @return string
+     * @return array
      */
-    public function getSpecialCharacters() {
-        return $this->specialCharacters;
+    public function getWordCharacters() {
+        return $this->wordCharacters;
     }
 
     /**
      * Sets the special characters to use.
-     * @param string $specialCharacters
+     * @param mixed $wordCharacters
      */
-    public function setSpecialCharacters($specialCharacters) {
-        $this->specialCharacters = $specialCharacters;
+    public function setWordCharacters($wordCharacters) {
+        
+        if (is_array($wordCharacters)) {
+            $this->wordCharacters = $wordCharacters;
+        }
+        else if (is_string($wordCharacters)) {
+            $this->wordCharacters = preg_split('//u', $wordCharacters, -1, PREG_SPLIT_NO_EMPTY);
+        }
+        else {
+            throw new \Netzkoenig\Nkhyphenation\Exception\HyphenationException(
+                    'The list of word characters must be a string or an array,'
+                    . ' but got \'' . gettype($wordCharacters) . '\' instead.',
+                    1384634628
+            );
+        }
     }
 
     /**
@@ -246,6 +256,6 @@ class HyphenationPatterns
         $this->setLeftmin($patternProvider->getMinCharactersBeforeFirstHyphen());
         $this->setRightmin($patternProvider->getMinCharactersAfterLastHyphen());
         
-        $this->setSpecialCharacters($patternProvider->getWordCharacterList());
+        $this->setWordCharacters($patternProvider->getWordCharacterList());
     }
 }

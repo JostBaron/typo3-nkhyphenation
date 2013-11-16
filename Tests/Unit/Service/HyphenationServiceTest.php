@@ -256,11 +256,11 @@ class HyphenationServiceTest
      * @return void
      */
     public function textSplittedIntoCorrectWords(
-            $specialCharacters,
+            $wordCharacters,
             $inputString,
             $expectedParts) {
 
-        $this->hyphenationPatterns->setSpecialCharacters($specialCharacters);
+        $this->hyphenationPatterns->setWordCharacters($wordCharacters);
 
         $hyphenator = $this->getAccessibleMock(
                 'Netzkoenig\\Nkhyphenation\\Service\\HyphenationService',
@@ -288,57 +288,59 @@ class HyphenationServiceTest
     public function textSplittedIntoCorrectWordsDataProvider() {
         $unicodeJoiner = json_decode('"\u200C"');
         $unicodeSoftHyphen = json_decode('"\u00AD"');
+        
+        $defaultWordCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-';
 
         return array(
             'empty string' => array(
-                '',
+                $defaultWordCharacters,
                 '',
                 array(),
             ),
             'single word' => array(
-                '',
+                $defaultWordCharacters,
                 'someword',
                 array('someword'),
             ),
             'multiple words' => array(
-                '',
-                'word1 word2 word3',
-                array('word1', 'word2', 'word3'),
+                $defaultWordCharacters,
+                'wordone wordtwo wordthree',
+                array('wordone', 'wordtwo', 'wordthree'),
             ),
             'no special chars set' => array(
-                '',
-                'word1äö',
-                array('word1'),
+                $defaultWordCharacters,
+                'wordäö',
+                array('word'),
             ),
             'special chars set' => array(
-                'äöü',
-                'word1äö',
-                array('word1äö'),
+                $defaultWordCharacters . 'äüö',
+                'wordäö',
+                array('wordäö'),
             ),
             'multiple words, some special chars set, but not all' => array(
-                'öü',
-                'word1äö',
-                array('word1', 'ö'),
+                $defaultWordCharacters . 'öü',
+                'wordäö',
+                array('word', 'ö'),
             ),
             'hyphened word' => array(
-                '',
+                $defaultWordCharacters,
                 'some-word',
                 array('some-word'),
             ),
             'joiner in word' => array(
-                '',
+                $defaultWordCharacters,
                 'some' . $unicodeJoiner . 'word',
                 array('some' . $unicodeJoiner . 'word'),
             ),
             'soft hyphen in word' => array(
-                '',
+                $defaultWordCharacters,
                 'some' . $unicodeSoftHyphen . 'word',
                 array('some' . $unicodeSoftHyphen . 'word'),
             ),
             'multiple words separated by non-word-characters' => array(
-                '',
-                'word1,word2;word3ħword4',
-                array('word1', 'word2', 'word3', 'word4'),
+                $defaultWordCharacters,
+                'wordone,wordtwo;wordthreeħwordfour',
+                array('wordone', 'wordtwo', 'wordthree', 'wordfour'),
             ),
         );
     }
