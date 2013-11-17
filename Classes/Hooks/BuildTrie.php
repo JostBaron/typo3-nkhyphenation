@@ -1,11 +1,13 @@
 <?php
 
+namespace Netzkoenig\Nkhyphenation\Hooks;
+
 /**
  * This hook builds the TRIE for hyphenation.
  *
  * @author Jost Baron <j.baron@netzkoenig.de>
  */
-class Tx_Nkhyphenation_Hooks_BuildTrie {
+class BuildTrie {
 
     function processDatamap_postProcessFieldArray ($status, $table, $id, &$fieldArray, &$object) {
 
@@ -26,5 +28,3 @@ class Tx_Nkhyphenation_Hooks_BuildTrie {
         }
     }
 }
-
-?>
