@@ -25,21 +25,3 @@ $TCA['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
 // Help texts for the backend forms.
 t3lib_extMgm::addLLrefForTCAdescr(
         'tx_nkhyphenation_domain_model_hyphenationpatterns', 'EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_hyphenationpatterns_csh.xml');
-
-// Register backend module.
-if (TYPO3_MODE === 'BE') {
-    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-        $_EXTKEY,
-        'tools',        // Main area
-        'hyphenation',  // Name of the module
-        '',             // Position of the module
-        array(          // Allowed controller action combinations
-            'HyphenationPatterns' => 'list,show,edit,update,new,create'
-        ),
-        array(          // Additional configuration
-            'access'    => 'user,group',
-            'icon'      => 'EXT:' . $_EXTKEY . '/ext_icon.gif',
-            'labels'    => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_backend.xml',
-        )
-    );
-}
