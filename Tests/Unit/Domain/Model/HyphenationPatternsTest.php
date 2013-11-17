@@ -44,7 +44,7 @@ class HyphenationPatternsTest
         );
 
         $this->assertEquals($expectedResult, $this->hyphenationPatterns->getTrie());
-//        $this->assertEquals(serialize($expectedResult), $this->hyphenationPatterns->getSerializedTrie());
+        $this->assertEquals(serialize($expectedResult), $this->hyphenationPatterns->getSerializedTrie());
     }
 
     /**
