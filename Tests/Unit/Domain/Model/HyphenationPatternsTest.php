@@ -335,6 +335,22 @@ class HyphenationPatternsTest
                 'someword',
                 'so-meword'
             ),
+            'Word start marker is respected' => array(
+                array(
+                    '.bl1a',
+                ),
+                '-',
+                'blahblah',
+                'bl-ahblah'
+            ),
+            'Word end marker is respected' => array(
+                array(
+                    'l3ah.',
+                ),
+                '-',
+                'blahblah',
+                'blahbl-ah'
+            ),
         );
     }
 

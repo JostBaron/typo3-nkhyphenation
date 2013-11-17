@@ -219,7 +219,7 @@ class HyphenationPatterns
      */
     public function insertPatternIntoTrie($pattern) {
         
-        $characters = str_split(preg_replace('/\d/', '', $pattern));
+        $characters = preg_split('//u', preg_replace('/\d/', '', $pattern), -1, PREG_SPLIT_NO_EMPTY);
         $points = preg_split('/[\D]/', $pattern);
 
         if (!isset($this->trie)) {
@@ -268,7 +268,7 @@ class HyphenationPatterns
      */
     public function hyphenateWord($word) {
 
-        $characters = preg_split('//u', mb_strtolower('_' . $word . '_', 'UTF-8'), -1, PREG_SPLIT_NO_EMPTY);
+        $characters = preg_split('//u', mb_strtolower('.' . $word . '.', 'UTF-8'), -1, PREG_SPLIT_NO_EMPTY);
         $points = array_fill(0, count($characters),  0);
 
         for ($i = 0; $i < count($characters); $i++) {
