@@ -24,7 +24,27 @@ class HyphenationPatternsTest
         $this->hyphenationPatterns = $this->getAccessibleMock(
                 'Netzkoenig\\Nkhyphenation\\Domain\\Model\\HyphenationPatterns',
                 array('dummy')
-            );
+        );
+        /*
+        $extbaseFileReferenceObject = $this->getAccessibleMock(
+                'stdClass',
+                array('getOriginalObject')
+        );
+        
+        $falFileReferenceObject = $this->getAccessibleMock(
+                'stdClass',
+                array('getContents')
+        );
+
+        $falFileReferenceObject->expects($this->any())
+                               ->method('getContents')
+                               ->will($this->returnValue(''));
+        
+        $extbaseFileReferenceObject->expects($this->any())
+                                   ->method('getOriginalObject')
+                                   ->will($this->returnValue($falFileReferenceObject));
+        
+        $this->hyphenationPatterns->setPatternfile($extbaseFileReferenceObject);*/
     }
 
     /**
@@ -184,7 +204,7 @@ class HyphenationPatternsTest
         // Fill TRIE with some random data and assert it has been inserted
         // to make sure this test is not futile.
         $this->hyphenationPatterns->_call('insertPatternIntoTrie', 'ad2e_');
-        $this->assertNotEquals(array(), $this->hyphenationPatterns->getTrie());
+        $this->assertNotEquals(null, $this->hyphenationPatterns->getTrie());
 
         // Run the real test
         $this->hyphenationPatterns->resetTrie();
@@ -343,6 +363,14 @@ class HyphenationPatternsTest
                 '-',
                 'blahblah',
                 'blahbl-ah'
+            ),
+            'Case of word is preserved' => array(
+                array(
+                    'som1eword'
+                ),
+                '-',
+                'SomeWoRD',
+                'Som-eWoRD'
             ),
         );
     }

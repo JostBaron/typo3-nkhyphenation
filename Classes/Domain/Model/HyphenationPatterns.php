@@ -53,13 +53,11 @@ class HyphenationPatterns
     /**
      * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference The file containing the
      * patterns.
-     * @validate notEmpty
      */
-    protected $patternfile;
+    protected $patternfile = null;
     
     /**
-     * @var string The pattern file format. 
-     * @validate notEmpty
+     * @var string The pattern file format.
      */
     protected $patternfileformat;
 
@@ -67,7 +65,7 @@ class HyphenationPatterns
      * Trie of the hyphenation patterns.
      * @var array
      */
-    protected $trie = null;
+    protected $trie = array();
 
     /**
      * Returns the title of the record.
@@ -242,7 +240,7 @@ class HyphenationPatterns
         
         $trieCacheInstance = $this->getTrieCache();
                 
-        if ((null === $this->trie) || !$trieCacheInstance->has($this->getTrieCacheIdentifier())) {
+        if (!$trieCacheInstance->has($this->getTrieCacheIdentifier())) {
             $this->buildTrie();
         }
         
@@ -255,10 +253,8 @@ class HyphenationPatterns
      */
     public function resetTrie() {
         
-        $trieCacheInstance = $this->getTrieCache();
-        $trieCacheInstance->remove($this->getTrieCacheIdentifier());
-        
-        $this->trie = null;
+        $this->trie = array();
+        $this->updateTrieCache();
     }
 
     /**
@@ -330,22 +326,30 @@ class HyphenationPatterns
      * Builds the trie from the current pattern file.
      */
     public function buildTrie() {
+        
+        if (!is_null($this->patternfile)) {
+        
+            $patternfileContent = $this->patternfile->getOriginalResource()->getContents();
+            
+            switch ($this->patternfileformat) {
+                case 'hyphenatorjs':
+                    $patternprovider = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+                            '\\Netzkoenig\\Nkhyphenation\\Utility\\HyphenatorJSPatternProvider',
+                            $patternfileContent
+                    );
+                    break;
+                default:
+                    throw new \TYPO3\CMS\Core\Exception('Unknown pattern file format.', 1385210987);
+            }
 
-        $patternfileContent = $this->patternfile->getOriginalResource()->getContents();
-        
-        switch ($this->patternfileformat) {
-            case 'hyphenatorjs':
-                $patternprovider = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-                        '\\Netzkoenig\\Nkhyphenation\\Utility\\HyphenatorJSPatternProvider',
-                        $patternfileContent
-                );
-                break;
-            default:
-                throw new \TYPO3\CMS\Core\Exception('Unknown pattern file format.', 1385210987);
+            $this->resetTrie();
+            $this->addPatterns($patternprovider);
         }
-        
-        $this->resetTrie();
-        $this->addPatterns($patternprovider);
+        else {
+            $this->resetTrie();
+            $this->trie = array();
+            $this->updateTrieCache();
+        }
     }
 
     /**
@@ -391,6 +395,10 @@ class HyphenationPatterns
         $result = array();
         $part = '';
 
+        // Get the original characters to build the result. The $characters
+        // array had strtolower applied to it.
+        $originalCharacters = preg_split('//u', $word, -1, PREG_SPLIT_NO_EMPTY);
+        
         for ($i = 1; $i < count($characters) - 1; $i++) {
             if (   (($points[$i] % 2) === 1)
                 && ($this->getLeftmin() < $i)
@@ -398,10 +406,10 @@ class HyphenationPatterns
                ) {
 
                 array_push($result, $part);
-                $part = $characters[$i];
+                $part = $originalCharacters[$i-1];
             }
             else {
-                $part .= $characters[$i];
+                $part .= $originalCharacters[$i-1];
             }
         }
 
