@@ -564,4 +564,88 @@ class HyphenationPatternsTest
             ),
         );
     }
+
+
+    /**
+     * @test
+     * @dataProvider hyphenationWithHTMLWorksDataProvider
+     * @return void
+     */
+    public function hyphenationWithHTMLWorks(
+            $inputString,
+            $wordcharacters,
+            $hyphenString,
+            $leftMin,
+            $rightMin,
+            $patterns,
+            $expectedResult) {
+
+        foreach ($patterns as $pattern) {
+            $this->hyphenationPatterns->_call('insertPatternIntoTrie', $pattern);
+        }
+
+        $this->hyphenationPatterns->setHyphen($hyphenString);
+        $this->hyphenationPatterns->setWordcharacters($wordcharacters);
+        $this->hyphenationPatterns->setLeftmin($leftMin);
+        $this->hyphenationPatterns->setRightmin($rightMin);
+        
+        $result = $this->hyphenationPatterns->hyphenation($inputString, TRUE);
+        
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    public function hyphenationWithHTMLWorksDataProvider() {
+        
+        $defaultWordCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-';
+        
+        return array(
+            'Single tag with potential hyphens only in text' => array(
+                '<span>Dies ist ein Test</span>',
+                $defaultWordCharacters,
+                '-',
+                2,
+                2,
+                array(
+                    'i1e',
+                    'e3st.',
+                ),
+                '<span>Di-es ist ein Te-st</span>',
+            ),
+            'Single tag with potential hyphen in tagname' => array(
+                '<span>Dies ist ein Test</span>',
+                $defaultWordCharacters,
+                '-',
+                2,
+                2,
+                array(
+                    'sp1an',
+                ),
+                '<span>Dies ist ein Test</span>',
+            ),
+            'Tag as pattern' => array(
+                '<strong>Dies ist ein Test</strong>',
+                $defaultWordCharacters,
+                '-',
+                2,
+                2,
+                array(
+                    '</stro5ng>',
+                ),
+                '<strong>Dies ist ein Test</strong>',
+            ),
+            'Text nodes on highest level' => array(
+                'Dies <span>ist ein</span> Test... Test, Test',
+                $defaultWordCharacters,
+                '-',
+                2,
+                2,
+                array(
+                    'te1st',
+                    '1ie',
+                    'a3n',
+                ),
+                'Dies <span>ist ein</span> Te-st... Te-st, Te-st',
+            )
+        );
+    }
 }

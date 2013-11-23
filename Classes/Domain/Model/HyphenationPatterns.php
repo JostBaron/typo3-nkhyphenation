@@ -427,27 +427,60 @@ class HyphenationPatterns
      * port) of a code piece from Hyphenator.js. The code there is in turn a
      * modified version of code from hypher.js by Bram Stein, 2011.
      */
-    public function hyphenation($text) {
-
-        $trie = $this->getTrie();
+    public function hyphenation($text, $preserverHTMLTags = TRUE) {
         
-        // Characters that are part of a word: \u200C is a zero-width space,
-        // \u00AD is the soft-hyphen &shy;
-        $unicodeWordCharacters = preg_split('//u', json_decode('"\u200C\u00AD"'), -1, PREG_SPLIT_NO_EMPTY);
+        if (TRUE === $preserverHTMLTags) {
+            // Load the text into a DOMDocument, hyphenate and replace all test
+            // nodes recursively and then print the resulting markup DOM
+            $domDocument = new \DOMDocument();
+            $domDocument->loadHTML('<?xml encoding="UTF-8">' . '<div>' . $text . '</div>');
+            $domDocument->encoding = 'utf-8';
+            
+            // Walk through all text nodes:
+            $xPath = new \DOMXPath($domDocument);
+            $textNodes = $xPath->query('//text()');
+            
+            foreach ($textNodes as $textNode) {
+                // Hyphenate the text node content, don't preserve HTML tags
+                // there this time.
+                $hyphenatedText = $this->hyphenation($textNode->nodeValue, FALSE);
+
+                // Replace text node with a new node with hyphenated text.
+                $hyphenatedNode = $domDocument->createTextNode($hyphenatedText);
+                $textNode->parentNode->replaceChild($hyphenatedNode, $textNode);
+            }
+            
+            // Generate the hyphenated HTML fragment
+            $result = $domDocument->saveHTML($xPath->query('/html/body/div')->item(0));
+            $result = mb_substr($result, 5);
+            $result = mb_substr($result, 0, -6);
+            
+            unset($textNodes);
+            unset($domDocument);
+            unset($xPath);
+            
+            return $result;
+        }
+        else {
         
-        $wordCharacters = $this->getWordcharacters();
-        $wordCharacters = array_merge($wordCharacters, $unicodeWordCharacters);
+            // Characters that are part of a word: \u200C is a zero-width space,
+            // \u00AD is the soft-hyphen &shy;
+            $unicodeWordCharacters = preg_split('//u', json_decode('"\u200C\u00AD"'), -1, PREG_SPLIT_NO_EMPTY);
 
-        $wordSplittingRegex = '/((?:' . implode('|', $wordCharacters) . ')+)/u';
+            $wordCharacters = $this->getWordcharacters();
+            $wordCharacters = array_merge($wordCharacters, $unicodeWordCharacters);
 
-        $thisInstance = $this;
+            $wordSplittingRegex = '/((?:' . implode('|', $wordCharacters) . ')+)/u';
 
-        return preg_replace_callback(
-                $wordSplittingRegex,
-                function($matches) use ($thisInstance) {
-                    return $thisInstance->hyphenateWord($matches[1]);
-                },
-                $text
-        );
+            $thisInstance = $this;
+
+            return preg_replace_callback(
+                    $wordSplittingRegex,
+                    function($matches) use ($thisInstance) {
+                        return $thisInstance->hyphenateWord($matches[1]);
+                    },
+                    $text
+            );
+        }
     }
 }
