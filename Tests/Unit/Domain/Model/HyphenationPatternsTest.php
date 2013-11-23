@@ -44,7 +44,6 @@ class HyphenationPatternsTest
         );
 
         $this->assertEquals($expectedResult, $this->hyphenationPatterns->getTrie());
-        $this->assertEquals(serialize($expectedResult), $this->hyphenationPatterns->getSerializedTrie());
     }
 
     /**
@@ -70,7 +69,6 @@ class HyphenationPatternsTest
         );
 
         $this->assertEquals($expectedResult, $this->hyphenationPatterns->getTrie());
-        $this->assertEquals(serialize($expectedResult), $this->hyphenationPatterns->getSerializedTrie());
     }
 
     /**
@@ -88,7 +86,6 @@ class HyphenationPatternsTest
         );
 
         $this->assertEquals($expectedResult, $this->hyphenationPatterns->getTrie());
-        $this->assertEquals(serialize($expectedResult), $this->hyphenationPatterns->getSerializedTrie());
     }
 
     /**
@@ -106,7 +103,6 @@ class HyphenationPatternsTest
         );
 
         $this->assertEquals($expectedResult, $this->hyphenationPatterns->getTrie());
-        $this->assertEquals(serialize($expectedResult), $this->hyphenationPatterns->getSerializedTrie());
     }
     
     /**
@@ -124,7 +120,6 @@ class HyphenationPatternsTest
         );
 
         $this->assertEquals($expectedResult, $this->hyphenationPatterns->getTrie());
-        $this->assertEquals(serialize($expectedResult), $this->hyphenationPatterns->getSerializedTrie());
     }
 
     /**
@@ -190,12 +185,10 @@ class HyphenationPatternsTest
         // to make sure this test is not futile.
         $this->hyphenationPatterns->_call('insertPatternIntoTrie', 'ad2e_');
         $this->assertNotEquals(array(), $this->hyphenationPatterns->getTrie());
-        $this->assertNotEquals(serialize(array()), $this->hyphenationPatterns->getSerializedTrie());
 
         // Run the real test
         $this->hyphenationPatterns->resetTrie();
         $this->assertEquals(array(), $this->hyphenationPatterns->getTrie());
-        $this->assertEquals(serialize(array()), $this->hyphenationPatterns->getSerializedTrie());
     }    
 
     /**

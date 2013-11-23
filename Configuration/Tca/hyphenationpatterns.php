@@ -93,27 +93,22 @@ $TCA['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
                 'eval'    => 'required,trim,num,int'
             ),
         ),
-        'serialized_trie' => array(
-            'label'   => 'serialized_trie',
-            'config' => array(
-                'type'    => 'passthrough',
-            ),
-        ),
         'patternfile' => array(
             'label'   => $ll . 'hyphenationpatterns_patternfile_label',
             'exclude' => 1,
-            'config' => array(
-                'type' => 'group',
-                'internal_type' => 'file',
-                'allowed' => 'js,json',
-                'size' => 1,
-                'maxitems' => 1,
-                'uploadfolder' => 'uploads/tx_nkhyphenation',
-                'show_thumbs' => 0,
-                'appearance' => array(
-                    'elementBrowserType' => 'file',
+            'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
+                    'patternfile',
+                    array(
+                        'maxitems' => 1,
+                        'minitems' => 1,
+                        'appearance' => array(
+                            'enabledControls' => array(
+                                'dragdrop' => FALSE,
+                                'localize' => FALSE,
+                            ),
+                        ),
+                    )
                 ),
-            ),
         ),
         'patternfileformat' => array(
             'label'   => $ll . 'hyphenationpatterns_patternfileformat_label',

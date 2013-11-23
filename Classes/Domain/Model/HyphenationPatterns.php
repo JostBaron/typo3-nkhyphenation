@@ -22,7 +22,7 @@ class HyphenationPatterns
      * Characters that may make up a word in this language.
      * @var array
      */
-    protected $wordCharacters;
+    protected $wordcharacters;
 
     /**
      * The string to insert as hyphen.
@@ -49,18 +49,25 @@ class HyphenationPatterns
      * @var int
      */
     protected $systemLanguage;
+    
+    /**
+     * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference The file containing the
+     * patterns.
+     * @validate notEmpty
+     */
+    protected $patternfile;
+    
+    /**
+     * @var string The pattern file format. 
+     * @validate notEmpty
+     */
+    protected $patternfileformat;
 
     /**
      * Trie of the hyphenation patterns.
      * @var array
      */
-    protected $trie = array();
-
-    /**
-     * The trie in serialized form for database storage.
-     * @var string
-     */
-    protected $serializedTrie;
+    protected $trie = null;
 
     /**
      * Returns the title of the record.
@@ -82,21 +89,21 @@ class HyphenationPatterns
      * Returns the word characters (the ones that define what a word is).
      * @return array
      */
-    public function getWordCharacters() {
-        return $this->wordCharacters;
+    public function getWordcharacters() {
+        return $this->wordcharacters;
     }
 
     /**
      * Sets the word characters to use.
      * @param mixed $wordCharacters
      */
-    public function setWordCharacters($wordCharacters) {
+    public function setWordcharacters($wordCharacters) {
         
         if (is_array($wordCharacters)) {
-            $this->wordCharacters = $wordCharacters;
+            $this->wordcharacters = $wordCharacters;
         }
         else if (is_string($wordCharacters)) {
-            $this->wordCharacters = preg_split('//u', $wordCharacters, -1, PREG_SPLIT_NO_EMPTY);
+            $this->wordcharacters = preg_split('//u', $wordCharacters, -1, PREG_SPLIT_NO_EMPTY);
         }
         else {
             throw new \Netzkoenig\Nkhyphenation\Exception\HyphenationException(
@@ -146,7 +153,7 @@ class HyphenationPatterns
      * a hyphen.
      * @return int
      */
-    public function getRightmin() {
+    public function getRightmin() {        
         return $this->rightmin;
     }
 
@@ -174,12 +181,71 @@ class HyphenationPatterns
     public function setSystemLanguage($systemLanguage) {
         $this->systemLanguage = $systemLanguage;
     }
+    
+    /**
+     * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference The pattern file.
+     */
+    public function getPatternfile() {
+        return $this->patternfile;
+    }
+    
+    /**
+     * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $patternfile The new
+     * pattern file.
+     */
+    public function setPatternfile(\TYPO3\CMS\Extbase\Domain\Model\FileReference $patternfile) {
+        $this->patternfile = $patternfile;
+    }
+    
+    /**
+     * @return string The pattern file format.
+     */
+    public function getPatternfileformat() {
+        return $this->patternfileformat;
+    }
+    
+    /**
+     * @param sring $patternfileFormat The new pattern file format.
+     */
+    public function setPatternfileformat($patternfileFormat) {
+        $this->patternfileformat = $patternfileFormat;
+    }
+    
+    /**
+     * @return \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface The cache
+     * frontend for the tries.
+     */
+    protected function getTrieCache() {
+        return $GLOBALS['typo3CacheManager']->getCache('nkhyphenation_triecache');
+    }
+    
+    /**
+     * @return string The cache identifier for the trie of this pattern set.
+     */
+    protected function getTrieCacheIdentifier() {
+        return 'hyphenationPatterns-' . $this->getUid();
+    }
+    
+    /**
+     * Writes the current trie to the cache.
+     */
+    protected function updateTrieCache() {
+        $trieCacheInstance = $this->getTrieCache();
+        $trieCacheInstance->set($this->getTrieCacheIdentifier(), $this->trie);
+    }
 
     /**
      * Returns the hyphenation-TRIE.
      * @return array
      */
-    public function getTrie() {        
+    public function getTrie() {
+        
+        $trieCacheInstance = $this->getTrieCache();
+                
+        if ((null === $this->trie) || !$trieCacheInstance->has($this->getTrieCacheIdentifier())) {
+            $this->buildTrie();
+        }
+        
         return $this->trie;
     }
 
@@ -188,36 +254,28 @@ class HyphenationPatterns
      * @return void
      */
     public function resetTrie() {
-        $this->trie = array();
-    }
-
-    /**
-     * Returns the serialized TRIE. Should only be called by the T3 persistence
-     * manager.
-     * @return string
-     */
-    public function getSerializedTrie() {
-        return serialize($this->trie);
-    }
-
-    /**
-     * Sets the serialized TRIE. Should only be called by the T3 persistence
-     * manager.
-     * @param string $serializedTrie
-     */
-    public function setSerializedTrie($serializedTrie) {
-        $this->trie = unserialize($serializedTrie);
+        
+        $trieCacheInstance = $this->getTrieCache();
+        $trieCacheInstance->remove($this->getTrieCacheIdentifier());
+        
+        $this->trie = null;
     }
 
     /**
      * Inserts a pattern into a hyphenation trie.
      * @param string $pattern The pattern to insert.
+     * @param boolean $updateCache Defines if the cached trie should be
+     * updated. This is useful if many patterns will be inserted
+     * one after another, since in that case there is no need to update the
+     * cache after each pattern. If you set this to false, make sure you update
+     * the cache manually afterwards or set the parameter to true when inserting
+     * the last pattern.
      * @return void
      * @license The code of this method is heavily inspired (but not simply
      * ported) by a code piece from Hyphenator.js. The code there is in turn a
      * modified version of code from hypher.js by Bram Stein, 2011.
      */
-    public function insertPatternIntoTrie($pattern) {
+    public function insertPatternIntoTrie($pattern, $updateCache = TRUE) {
         
         $characters = preg_split('//u', preg_replace('/\d/', '', $pattern), -1, PREG_SPLIT_NO_EMPTY);
         $points = preg_split('/[\D]/', $pattern);
@@ -240,22 +298,54 @@ class HyphenationPatterns
         foreach ($points as $point) {
             array_push($currentTrie['points'], ($point === '') ? 0 : intval($point));
         }
+        
+        if (TRUE === $updateCache) {
+            $this->updateTrieCache();
+        }
     }
     
     /**
      * Fill this pattern-object from a patternProvider.
      * @param \Netzkoenig\Nkhyphenation\Utility\AbstractPatternProvider $patternProvider
      */
-    public function addPatterns($patternProvider) {
+    protected function addPatterns($patternProvider) {
         
-        foreach ($patternProvider->getPatternList() as $pattern) {
-            $this->insertPatternIntoTrie($pattern);
+        $patternList = $patternProvider->getPatternList();
+        
+        foreach ($patternList as $pattern) {
+            // Don't update the cache, do that once at the end of this method
+            $this->insertPatternIntoTrie($pattern, FALSE);
         }
+        
+        // Update the cache, needed since not done above.
+        $this->updateTrieCache();
         
         $this->setLeftmin($patternProvider->getMinCharactersBeforeFirstHyphen());
         $this->setRightmin($patternProvider->getMinCharactersAfterLastHyphen());
         
-        $this->setWordCharacters($patternProvider->getWordCharacterList());
+        $this->setWordcharacters($patternProvider->getWordCharacterList());
+    }
+    
+    /**
+     * Builds the trie from the current pattern file.
+     */
+    public function buildTrie() {
+
+        $patternfileContent = $this->patternfile->getOriginalResource()->getContents();
+        
+        switch ($this->patternfileformat) {
+            case 'hyphenatorjs':
+                $patternprovider = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+                        '\\Netzkoenig\\Nkhyphenation\\Utility\\HyphenatorJSPatternProvider',
+                        $patternfileContent
+                );
+                break;
+            default:
+                throw new \TYPO3\CMS\Core\Exception('Unknown pattern file format.', 1385210987);
+        }
+        
+        $this->resetTrie();
+        $this->addPatterns($patternprovider);
     }
 
     /**
@@ -331,18 +421,20 @@ class HyphenationPatterns
      */
     public function hyphenation($text) {
 
+        $trie = $this->getTrie();
+        
         // Characters that are part of a word: \u200C is a zero-width space,
         // \u00AD is the soft-hyphen &shy;
         $unicodeWordCharacters = preg_split('//u', json_decode('"\u200C\u00AD"'), -1, PREG_SPLIT_NO_EMPTY);
         
-        $wordCharacters = $this->getWordCharacters();
+        $wordCharacters = $this->getWordcharacters();
         $wordCharacters = array_merge($wordCharacters, $unicodeWordCharacters);
 
         $wordSplittingRegex = '/((?:' . implode('|', $wordCharacters) . ')+)/u';
 
         $thisInstance = $this;
 
-        preg_replace_callback(
+        return preg_replace_callback(
                 $wordSplittingRegex,
                 function($matches) use ($thisInstance) {
                     return $thisInstance->hyphenateWord($matches[1]);

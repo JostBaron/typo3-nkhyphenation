@@ -7,7 +7,7 @@ namespace Netzkoenig\Nkhyphenation\Utility;
  * Hyphenator.js pattern files.
  * @author Jost Baron <j.baron@netzkoenig.de>
  */
-abstract class HyphenatorJSPatternProvider {
+class HyphenatorJSPatternProvider {
     
     /**
      * List of patterns.
@@ -45,13 +45,14 @@ abstract class HyphenatorJSPatternProvider {
 
         // Remove trailing ';':
         $jsonInput = preg_replace('/\s*;\s*$/u', '', $jsonInput);
-        
-        $regex = '/((?:,|\{)\s*)([^:\s\'\"]+)(\s*:\s*)([^,\{]*|(?:\"[^\"\n]*\"))/u';
-        $matches = array();
-        preg_match($regex, $jsonInput, $matches);
-        
+
         // Now replace all object keys with themself in a quoted version.
+        $regex = '/((?:,|\{)\s*)([^:\s\'\"]+)(\s*:\s*)([^,\{]*|(?:\"[^\"\n]*\"))/u';
         $jsonInput = preg_replace($regex, '$1"$2"$3$4', $jsonInput);        
+
+        // And replace all single quotes by double quotes (assuming they don't
+        // belong to the data...
+        $jsonInput = preg_replace("/'/u", '"', $jsonInput);
         
         // Decode file
         $parsedInput = json_decode($jsonInput, true);

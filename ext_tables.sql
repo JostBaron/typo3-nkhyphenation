@@ -18,7 +18,6 @@ CREATE TABLE tx_nkhyphenation_domain_model_hyphenationpatterns (
     rightmin int(11) DEFAULT '2' NOT NULL,
     patternfile varchar(255) DEFAULT '' NOT NULL,
     patternfileformat varchar(255) DEFAULT '' NOT NULL,
-    serialized_trie blob,
 
     PRIMARY KEY (uid),
     KEY parent (pid)
