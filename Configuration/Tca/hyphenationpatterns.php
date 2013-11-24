@@ -39,6 +39,9 @@ $TCA['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
                 'type'                => 'select',
                 'foreign_table'       => 'sys_language',
                 'foreign_table_where' => 'ORDER BY sys_language.title',
+                'items' => array(
+                    array('Default', '0'),
+                )
             ),
         ),
         'hidden' => array(
