@@ -25,26 +25,6 @@ class HyphenationPatternsTest
                 'Netzkoenig\\Nkhyphenation\\Domain\\Model\\HyphenationPatterns',
                 array('dummy')
         );
-        /*
-        $extbaseFileReferenceObject = $this->getAccessibleMock(
-                'stdClass',
-                array('getOriginalObject')
-        );
-        
-        $falFileReferenceObject = $this->getAccessibleMock(
-                'stdClass',
-                array('getContents')
-        );
-
-        $falFileReferenceObject->expects($this->any())
-                               ->method('getContents')
-                               ->will($this->returnValue(''));
-        
-        $extbaseFileReferenceObject->expects($this->any())
-                                   ->method('getOriginalObject')
-                                   ->will($this->returnValue($falFileReferenceObject));
-        
-        $this->hyphenationPatterns->setPatternfile($extbaseFileReferenceObject);*/
     }
 
     /**
