@@ -5,8 +5,8 @@ if (!defined('TYPO3_MODE')) {
 }
 
 // Register cache for the tries
-if (!is_array($TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['nkhyphenation_triecache'])) {
-    $TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['nkhyphenation_triecache'] = array();
+if (!is_array($TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['nkhyphenation_cache'])) {
+    $TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['nkhyphenation_cache'] = array();
 }
 
 // Register hook for stdWrap

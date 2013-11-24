@@ -17,7 +17,7 @@ class HyphenationPatternsTest
     protected $hyphenationPatterns;
 
     /**
-     * Create a mocked up hypenation patterns object.
+     * Create a mocked hypenation patterns object.
      * @return void
      */
     protected function setUp() {
@@ -25,6 +25,8 @@ class HyphenationPatternsTest
                 'Netzkoenig\\Nkhyphenation\\Domain\\Model\\HyphenationPatterns',
                 array('dummy')
         );
+        
+        $this->hyphenationPatterns->resetTrie();
     }
 
     /**
@@ -135,7 +137,7 @@ class HyphenationPatternsTest
      * @test
      */
     public function wordCharactersCanBeSet() {
-        $wordCharacters = 'öas|ſ«¢„€łł¶€ŧ←ø↓←ł¹²³';
+        $wordCharacters = 'öas|ſ«¢„€ł¶ŧ←ø↓¹²³';
         $this->hyphenationPatterns->setWordCharacters($wordCharacters);
         $this->assertEquals($wordCharacters, join('', $this->hyphenationPatterns->getWordCharacters()));
     }
