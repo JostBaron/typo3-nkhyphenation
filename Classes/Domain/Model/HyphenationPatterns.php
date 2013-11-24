@@ -113,11 +113,11 @@ class HyphenationPatterns
     }
 
     /**
-     * Returns the hyphen to use.
+     * Returns the hyphen to use, as UTF-8 string with decoded entities.
      * @return string
      */
     public function getHyphen() {
-        return $this->hyphen;
+        return html_entity_decode($this->hyphen, ENT_COMPAT | ENT_HTML401, 'UTF-8');
     }
 
     /**
@@ -428,6 +428,8 @@ class HyphenationPatterns
      * modified version of code from hypher.js by Bram Stein, 2011.
      */
     public function hyphenation($text, $preserverHTMLTags = TRUE) {
+        
+        $trie = $this->getTrie();
         
         if (TRUE === $preserverHTMLTags) {
             // Load the text into a DOMDocument, hyphenate and replace all test

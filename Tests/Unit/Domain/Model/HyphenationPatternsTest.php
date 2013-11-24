@@ -645,7 +645,20 @@ class HyphenationPatternsTest
                     'a3n',
                 ),
                 'Dies <span>ist ein</span> Te-st... Te-st, Te-st',
-            )
+            ),
+            'Entity as hyphen' => array(
+                '<p>Dies ist ein Test</p>',
+                $defaultWordCharacters,
+                '&shy;',
+                2,
+                2,
+                array(
+                    'te1st',
+                    '1ie',
+                    'a3n',
+                ),
+                html_entity_decode('<p>Dies ist ein Te&shy;st</p>', ENT_COMPAT | ENT_HTML401, 'UTF-8'),
+            ),
         );
     }
 }
