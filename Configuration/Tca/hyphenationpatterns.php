@@ -49,7 +49,7 @@ $TCA['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
             'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
             'config'  => array(
                 'type'    => 'check',
-                'default' => 0,
+                'default' => '0',
             ),
         ),
         'title' => array(
@@ -126,7 +126,7 @@ $TCA['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
     ),
     'types' => array(
         0 => array(
-            'showitem' => 'title,system_language,wordcharacters,hyphen,leftmin,rightmin,patternfile,patternfileformat',
+            'showitem' => 'hidden,title,system_language,wordcharacters,hyphen,leftmin,rightmin,patternfile,patternfileformat',
         ),
     ),
 );
