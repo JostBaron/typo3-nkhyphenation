@@ -3,21 +3,27 @@
     <file source-language="en" datatype="plaintext" original="messages" date="2013-07-12T21:41:32Z" product-name="nkhyphenation">
         <header/>
         <body>
+            <trans-unit id="hidden.description" xml:space="preserve">
+                <source>
+                    Check this if the patterns here should not be used, but you
+                    don't want to delete the record either.
+                </source>
+            </trans-unit>
             <trans-unit id="title.description" xml:space="preserve">
                 <source>
-                    The name of this pattern set. Only used to identify the
-                    record in the backend.
+                    The name of this pattern set. Only used to make it easier
+                    for users to recognize what this record is for.
                 </source>
             </trans-unit>
             <trans-unit id="wordcharacters.description" xml:space="preserve">
                 <source>
                     By default, only the soft hyphen and the zero width joiner
                     (U+200D) are considered to be the characters that can make
-                    up a word. You can add additional characters occuring in
-                    words here here. For example in german you might set this to
-                    the characters a to z, A to Z  and the characters Ä, Ö, Ü,
-                    ä, ö, ü and ß. This field is not trimmed, so watch your
-                    white spaces.
+                    up a word. You can add additional characters making up words
+                    here. These characters are used additionally to the ones
+                    defined in the pattern file. If the pattern file does not
+                    contain a specification which characters do make up words in
+                    the language, you have to set word characters here.
                 </source>
             </trans-unit>
             <trans-unit id="system_language.description" xml:space="preserve">
@@ -31,6 +37,9 @@
                 <source><![CDATA[
                     The string to insert as a hyphen. This should usually be the
                     HTML entity '&amp;shy;', but you could need something else.
+                    Entities don't appear in the source code as entities, since
+                    they are decoded before echoing them out (DOMDocument likes
+                    it that way).
                 ]]></source>
             </trans-unit>
             <trans-unit id="leftmin.description" xml:space="preserve">
@@ -43,6 +52,20 @@
                 <source>
                     The minimal number of characters in a word that must be left
                     after the last hyphen is set.
+                </source>
+            </trans-unit>
+            <trans-unit id="patternfile.description" xml:space="preserve">
+                <source>
+                    The file to get the patterns from. You can get pattern files
+                    from various sources, consult the manual about details.
+                    You need to choose the correct format of your pattern file
+                    below. You can ignore the file metadata fields (title and
+                    description).
+                </source>
+            </trans-unit>
+            <trans-unit id="patternfileformat.description" xml:space="preserve">
+                <source>
+                    The format the pattern file has.
                 </source>
             </trans-unit>
         </body>
