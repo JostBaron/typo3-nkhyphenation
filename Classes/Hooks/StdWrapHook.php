@@ -117,7 +117,7 @@ class StdWrapHook implements \TYPO3\CMS\Frontend\ContentObject\ContentObjectStdW
         }
         
         // Find out if HTML tags should be preserved, do stdWrap processing for them.
-        $preserveHtmlTags = isset($configuration['preserveHtmlTags']) ? '1' : '0';
+        $preserveHtmlTags = isset($configuration['preserveHtmlTags']) ? $configuration['preserveHtmlTags'] : '1';
         
         if (isset($configuration['preserveHtmlTags.'])) {
             $preserveHtmlTagsProperties = $configuration['preserveHtmlTags.'];
@@ -126,7 +126,7 @@ class StdWrapHook implements \TYPO3\CMS\Frontend\ContentObject\ContentObjectStdW
             $preserveHtmlTags = $parentObject->stdWrap($preserveHtmlTags, $preserveHtmlTagsStdWrapProperties);
         }
         
-        $preserveHtmlTags = empty($preserveHtmlTags) ? FALSE : TRUE;
+        $preserveHtmlTags = ('0' === $preserveHtmlTags) ? FALSE : TRUE;
         
         // Fetch the correct pattern set and do the hyphenation.
         $hyphenationPatterns = $this->getHyphenationPatternRepository()->findOneBySystemLanguage($languageValue);
