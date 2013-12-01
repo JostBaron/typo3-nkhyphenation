@@ -542,7 +542,7 @@ class HyphenationPatterns
             $wordCharacters = $this->getWordcharacters();
             $wordCharacters = array_merge($wordCharacters, $unicodeWordCharacters);
 
-            $wordSplittingRegex = '/((?:' . implode('|', $wordCharacters) . ')+)/u';
+            $wordSplittingRegex = '/((?:' . implode('|', $wordCharacters) . ')+)/iu';
 
             $thisInstance = $this;
 

@@ -544,6 +544,16 @@ class HyphenationPatternsTest
                 'wordone,wordtwo;wordthreeħwordfour',
                 array('wordone', 'wordtwo', 'wordthree', 'wordfour'),
             ),
+            'One word with different cases' => array(
+                'abcdefghijklmnopqrstuvwxyz',
+                'WoRAD',
+                array('WoRAD'),
+            ),
+            'Case sensitive splitting with cyrillic letters' => array(
+                'дҠЛЛ̕',
+                'ДҠЛл',
+                array('ДҠЛл')
+            ),
         );
     }
 
