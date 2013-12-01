@@ -1,2 +1,8 @@
 nbproject
 /Resources/Private/Language/*.xml
+/Documentation/10_conf_py.yml
+/Documentation/30_Settings.yml
+/Documentation/10+20_conf_py.yml
+/Documentation/10+20+30_conf_py.yml
+/Documentation/20_GlobalSettings.yml
+/Documentation/build/
