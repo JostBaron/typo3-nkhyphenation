@@ -11,7 +11,7 @@
  ***************************************************************/
 
 $EM_CONF[$_EXTKEY] = array(
-	'title' => 'Hyphenation',
+	'title' => 'Server side hyphenation for TYPO3',
 	'description' => 'Adds soft hyphenation capabilities to TYPO3. Provides a ViewHelper, a stdWrap property and some static templates to enable hyphenation.',
 	'category' => 'fe',
 	'shy' => 0,
@@ -37,7 +37,7 @@ $EM_CONF[$_EXTKEY] = array(
 		),
 		'depends' => array(
 			'typo3' => '6.0.0-6.1.99',
-			'php' => '5.3.0-6.1.99',
+			'php' => '5.3.0-5.5.99',
 			'fluid' => '1.3.0-6.1.99',
 			'extbase' => '1.3.0-6.1.99',
 		),
