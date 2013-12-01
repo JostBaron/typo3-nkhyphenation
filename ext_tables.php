@@ -27,4 +27,5 @@ t3lib_extMgm::addLLrefForTCAdescr(
         'tx_nkhyphenation_domain_model_hyphenationpatterns', 'EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_hyphenationpatterns_csh.xml');
 
 // Register static templates
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'Configuration/TypoScript', 'Hyphenation - basic settings');
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'Configuration/TypoScript/csc-6.1', 'Hyphenation for CSS Styled Content 6.1');

@@ -1,0 +1,6 @@
+# Basic extension configuration.
+plugin.tx_nkhyphenation {  
+  settings {
+    includeHyphenRemovalJS = 1
+  }
+}
