@@ -21,7 +21,8 @@ class HyphenateViewHelper
      * Registers the arguments.
      */
     public function initializeArguments() {
-        $this->registerArgument('patternsUid', 'int', 'Uid of the patterns record to use.', TRUE);
+        $this->registerArgument('language', 'int', 'Language of the hyphenated content.', TRUE);
+        $this->registerArgument('preserveHtmlTags', 'boolean', 'Defines if HTML tags should be preseved.', FALSE, true);
     }
 
     /**
@@ -30,11 +31,10 @@ class HyphenateViewHelper
      */
     public function render() {
         
-        $patternsUid = $this->arguments['patternsUid'];
-        $patterns = $this->hyphenationPatternRepository->findByUid($patternsUid);
+        $patterns = $this->hyphenationPatternRepository->findOneBySystemLanguage($this->arguments['language']);
         
         $content = $this->renderChildren();
         
-        return $patterns->hyphenation($content);
+        return $patterns->hyphenation($content, $this->arguments['preserveHtmlTags']);
     }
 }
