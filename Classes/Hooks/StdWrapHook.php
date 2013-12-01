@@ -130,7 +130,13 @@ class StdWrapHook implements \TYPO3\CMS\Frontend\ContentObject\ContentObjectStdW
         
         // Fetch the correct pattern set and do the hyphenation.
         $hyphenationPatterns = $this->getHyphenationPatternRepository()->findOneBySystemLanguage($languageValue);
-        return $hyphenationPatterns->hyphenation($content, $preserveHtmlTags);
+        
+        if (!is_null($hyphenationPatterns)) {
+            return $hyphenationPatterns->hyphenation($content, $preserveHtmlTags);
+        }
+        else {
+            return $content;
+        }
     }
     
     /**

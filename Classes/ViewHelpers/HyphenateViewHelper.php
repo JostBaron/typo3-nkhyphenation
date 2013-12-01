@@ -35,6 +35,11 @@ class HyphenateViewHelper
         
         $content = $this->renderChildren();
         
-        return $patterns->hyphenation($content, $this->arguments['preserveHtmlTags']);
+        if (!is_null($patterns)) {
+            return $patterns->hyphenation($content, $this->arguments['preserveHtmlTags']);
+        }
+        else {
+            return $content;
+        }
     }
 }
