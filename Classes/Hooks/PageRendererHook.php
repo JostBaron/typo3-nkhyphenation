@@ -22,8 +22,6 @@ class PageRendererHook {
         
         if (('FE' === TYPO3_MODE) && ('1' === $settings['includeHyphenRemovalJS'])) {
 
-            var_dump("foobar!");
-            
             $extPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('nkhyphenation');
             $extPathWithAbsRefPrefix = $GLOBALS['TSFE']->absRefPrefix . $extPath;
             
