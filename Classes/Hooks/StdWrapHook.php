@@ -13,7 +13,7 @@ class StdWrapHook implements \TYPO3\CMS\Frontend\ContentObject\ContentObjectStdW
      * Repository for hyphenation patterns.
      * @var \Netzkoenig\Nkhyphenation\Domain\Repository\HyphenationPatternsRepository
      */
-    protected $hyphenationPatternRepository = null;
+    protected $hyphenationPatternRepository = NULL;
     
     /**
      * Does nothing, only implemented to satisfy interface contract.

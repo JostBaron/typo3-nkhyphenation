@@ -22,7 +22,7 @@ class HyphenateViewHelper
      */
     public function initializeArguments() {
         $this->registerArgument('language', 'int', 'Language of the hyphenated content.', TRUE);
-        $this->registerArgument('preserveHtmlTags', 'boolean', 'Defines if HTML tags should be preseved.', FALSE, true);
+        $this->registerArgument('preserveHtmlTags', 'boolean', 'Defines if HTML tags should be preseved.', FALSE, TRUE);
     }
 
     /**

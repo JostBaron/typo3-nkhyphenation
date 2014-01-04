@@ -65,7 +65,7 @@ class HyphenationPatterns
      * Check if data from the cache was already fetched.
      * @var boolean
      */
-    protected $dataFromCacheFetched = false;
+    protected $dataFromCacheFetched = FALSE;
     
     /**
      * Trie of the hyphenation patterns.
@@ -116,7 +116,7 @@ class HyphenationPatterns
             $this->trie         = $cacheEntry['trie'];
             $this->dataFromFile = $cacheEntry['dataFromFile'];
 
-            $this->dataFromCacheFetched = true;
+            $this->dataFromCacheFetched = TRUE;
         }
     }
     
@@ -434,15 +434,16 @@ class HyphenationPatterns
      */
     public function hyphenateWord($word) {
 
-       $characters = preg_split('//u', mb_strtolower('.' . $word . '.', 'UTF-8'), -1, PREG_SPLIT_NO_EMPTY);
-        $points = array_fill(0, count($characters),  0);
+        $characters = preg_split('//u', mb_strtolower('.' . $word . '.', 'UTF-8'), -1, PREG_SPLIT_NO_EMPTY);
+        $points = array_fill(0, count($characters), 0);
 
-        for ($i = 0; $i < count($characters); $i++) {
+        $numberCharacters = count($characters);
+        for ($i = 0; $i < $numberCharacters; $i++) {
 
             // Start from the root of the TRIE
             $currentTrieNode = $this->getTrie();
             
-            for ($j = $i; $j < count($characters); $j++) {
+            for ($j = $i; $j < $numberCharacters; $j++) {
 
                 // The character currently inspected
                 $character = $characters[$j];
@@ -456,8 +457,8 @@ class HyphenationPatterns
                 $currentTrieNode = $currentTrieNode[$character];
                 if (array_key_exists('points', $currentTrieNode)) {
                     $nodePoints = $currentTrieNode['points'];
-
-                    for ($k = 0; $k < count($nodePoints); $k++) {
+                    $nodePointsLength = count($nodePoints);
+                    for ($k = 0; $k < $nodePointsLength; $k++) {
                         $points[$i + $k] = max($points[$i + $k], $nodePoints[$k]);
                     }
                 }
@@ -471,10 +472,10 @@ class HyphenationPatterns
         // array had strtolower applied to it.
         $originalCharacters = preg_split('//u', $word, -1, PREG_SPLIT_NO_EMPTY);
         
-        for ($i = 1; $i < count($characters) - 1; $i++) {
+        for ($i = 1; $i < $numberCharacters - 1; $i++) {
             if (   (($points[$i] % 2) === 1)
                 && ($this->getLeftmin() < $i)
-                && ($i < (count($characters) - $this->getRightmin()))
+                && ($i < ($numberCharacters - $this->getRightmin()))
                ) {
 
                 array_push($result, $part);

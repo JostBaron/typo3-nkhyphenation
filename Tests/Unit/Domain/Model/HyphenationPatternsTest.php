@@ -186,7 +186,7 @@ class HyphenationPatternsTest
         // Fill TRIE with some random data and assert it has been inserted
         // to make sure this test is not futile.
         $this->hyphenationPatterns->_call('insertPatternIntoTrie', 'ad2e_');
-        $this->assertNotEquals(null, $this->hyphenationPatterns->getTrie());
+        $this->assertNotEquals(NULL, $this->hyphenationPatterns->getTrie());
 
         // Run the real test
         $this->hyphenationPatterns->resetTrie();
@@ -470,7 +470,8 @@ class HyphenationPatternsTest
 
         $this->hyphenationPatterns->setWordCharacters($wordCharacters);
 
-        for ($i = 0; $i < count($expectedParts); $i++) {
+        $numberExpectedParts = count($expectedParts);
+        for ($i = 0; $i < $numberExpectedParts; $i++) {
             $this->hyphenationPatterns->expects($this->at($i))
                                       ->method('hyphenateWord')
                                       ->with($expectedParts[$i]);

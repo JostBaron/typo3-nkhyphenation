@@ -12,7 +12,7 @@ class HyphenatorJSPatternProviderTest
      * @test
      * @dataProvider checkResultDataProvider
      */
-    function checkResult(
+    public function checkResult(
             $input,
             $expectedMinLeft,
             $expectedMinRight,
@@ -45,7 +45,7 @@ class HyphenatorJSPatternProviderTest
         $this->assertEquals($expectedWordCharacters, $actualWordCharacterList);
     }
     
-    function checkResultDataProvider() {
+    public function checkResultDataProvider() {
         $defaultWordCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@-_';
         $defaultWordCharacters = preg_split('//u', $defaultWordCharacters, -1, PREG_SPLIT_NO_EMPTY);
 
