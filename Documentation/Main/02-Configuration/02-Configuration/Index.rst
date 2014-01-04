@@ -20,7 +20,7 @@ To use the extension, the following steps are necessary:
 - Use either the provided view helper or the stdWrap property to trigger
   hyphenation.
 - To make hyphenation work with CSS Styled Content, include the static template
-  for your version of CSC.
+  for your version of CSC. Include it *after* the static template from CSC.
 
 Creating a pattern set
 """"""""""""""""""""""
@@ -31,7 +31,7 @@ downloaded `here <http://code.google.com/p/hyphenator/source/browse/tags>`_.
 Download the appropriate pattern set and save it to the fileadmin folder or some
 other storage.
 
-The go into the list module and create a new record of type
+Then go into the list module and create a new record of type
 "Hyphenation Patterns". It does not matter which page you use to store the
 record, as the storage PID is ignored for hyphenation patterns. The following
 options are available:
@@ -92,7 +92,7 @@ options are available:
          precedence.
 
  - :Field:
-         Minimal number of characters after lase hyphen (rmin)
+         Minimal number of characters after last hyphen (rmin)
 
    :Description:
          Same as lmin.
