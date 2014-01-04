@@ -126,7 +126,7 @@ class StdWrapHook implements \TYPO3\CMS\Frontend\ContentObject\ContentObjectStdW
             $preserveHtmlTags = $parentObject->stdWrap($preserveHtmlTags, $preserveHtmlTagsStdWrapProperties);
         }
         
-        $preserveHtmlTags = ('0' === $preserveHtmlTags) ? FALSE : TRUE;
+        $preserveHtmlTags = ('1' !== $preserveHtmlTags) ? FALSE : TRUE;
         
         // Fetch the correct pattern set and do the hyphenation.
         $hyphenationPatterns = $this->getHyphenationPatternRepository()->findOneBySystemLanguage($languageValue);

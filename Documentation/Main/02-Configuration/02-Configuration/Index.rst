@@ -215,10 +215,12 @@ hyphenation property defined. The following properties are available:
          boolean/stdWrap
 
    :Description:
-         Defines whether HTML tags should be respected or not.
+         Defines whether HTML tags should be respected or not. The value '1'
+         signals to respect HTML tags, everything else makes the extension to
+         disrespect them.
 
    :Default:
-         true (preserve tags)
+         1 (preserve tags)
 
  - :Property:
          hyphenateBefore
