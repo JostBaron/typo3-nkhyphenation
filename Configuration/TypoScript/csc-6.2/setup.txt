@@ -1,0 +1,29 @@
+################################################################################
+#
+# Static setup from EXT:nkhyphenation - add hyphenation for CSC 6.1
+#
+################################################################################
+
+# The hyphenation configuration
+temp.tx_nkhyphenation.csc_hyphenate = 1
+temp.tx_nkhyphenation.csc_hyphenate {
+    language.stdWrap.cObject = TEXT
+    language.stdWrap.cObject {
+        field = sys_language_uid
+    }
+}
+
+# Use the stdWrap property on all sensible content elements
+tt_content {
+    text.20.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    bullets.20.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    uploads.20.stdWrap.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    table.20.stdWrap.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    mailform.20.stdWrap.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    search.20.stdWrap.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    search.30.stdWrap.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    menu.20.stdWrap.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    list.20.stdWrap.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    html.20.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    login.stdWrap.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+}

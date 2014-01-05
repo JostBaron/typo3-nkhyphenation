@@ -30,3 +30,4 @@ t3lib_extMgm::addLLrefForTCAdescr(
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'Configuration/TypoScript', 'Hyphenation - basic settings');
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'Configuration/TypoScript/csc-6.0', 'Hyphenation for CSS Styled Content 6.0');
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'Configuration/TypoScript/csc-6.1', 'Hyphenation for CSS Styled Content 6.1');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'Configuration/TypoScript/csc-6.2', 'Hyphenation for CSS Styled Content 6.2');
