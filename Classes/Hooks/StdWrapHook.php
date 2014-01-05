@@ -146,12 +146,8 @@ class StdWrapHook implements \TYPO3\CMS\Frontend\ContentObject\ContentObjectStdW
     protected function getHyphenationPatternRepository() {
         
         if (is_null($this->hyphenationPatternRepository)) {
-            $this->hyphenationPatternRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Netzkoenig\\Nkhyphenation\\Domain\\Repository\\HyphenationPatternsRepository');
-
-            $querySettings = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\Typo3QuerySettings');
-            $querySettings->setRespectStoragePage(FALSE);
-            $querySettings->setRespectSysLanguage(FALSE);
-            $this->hyphenationPatternRepository->setDefaultQuerySettings($querySettings);
+            $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+            $this->hyphenationPatternRepository = $objectManager->get('Netzkoenig\\Nkhyphenation\\Domain\\Repository\\HyphenationPatternsRepository');
         }
         
         return $this->hyphenationPatternRepository;
