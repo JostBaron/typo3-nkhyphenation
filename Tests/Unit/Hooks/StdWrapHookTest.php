@@ -310,4 +310,28 @@ class StdWrapHookTest
                 $this->contentRenderObjectMock
         );
     }
+    
+    /**
+     * @test
+     */
+    public function stdWrapPreservesHtmlTagsByDefault() {
+        
+        $this->hyphenationPatternsMock->expects($this->once())
+                                      ->method('hyphenation')
+                                      ->with(
+                                                $this->equalTo('Testvalue'),
+                                                TRUE
+                                        );
+
+        $this->contentRenderObjectMock->expects($this->never())
+                                      ->method('stdWrap');
+
+        $this->hookClass->doHyphenation(
+                'Testvalue',
+                array(
+                    'language' => '0',
+                ),
+                $this->contentRenderObjectMock
+        );
+    }
 }
