@@ -15,15 +15,15 @@ temp.tx_nkhyphenation.csc_hyphenate {
 
 # Use the stdWrap property on all sensible content elements
 tt_content {
-    text.20.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
-    bullets.20.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
-    uploads.20.stdWrap.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
-    table.20.stdWrap.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
-    mailform.20.stdWrap.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
-    search.20.stdWrap.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
-    search.30.stdWrap.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
-    menu.20.stdWrap.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
-    list.20.stdWrap.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
-    html.20.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
-    login.stdWrap.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    text.20.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    bullets.20.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    uploads.20.stdWrap.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    table.20.stdWrap.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    mailform.20.stdWrap.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    search.20.stdWrap.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    search.30.stdWrap.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    menu.20.stdWrap.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    list.20.stdWrap.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    html.20.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
+    login.stdWrap.orderedStdWrap.10.hyphenate < temp.tx_nkhyphenation.csc_hyphenate
 }
