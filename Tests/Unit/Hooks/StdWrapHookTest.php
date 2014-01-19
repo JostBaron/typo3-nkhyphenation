@@ -52,9 +52,12 @@ class StdWrapHookTest
                 array('stdWrap')
         );
         
+        $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+        
         $this->hyphenationPatternsRepositoryMock = $this->getAccessibleMock(
                 'Netzkoenig\\Nkhyphenation\\Domain\\Repository\\HyphenationPatternsRepository',
-                array('findOneBySystemLanguage')
+                array('findOneBySystemLanguage'),
+                array($objectManager)
         );
         
         $this->hyphenationPatternsMock = $this->getAccessibleMock(
