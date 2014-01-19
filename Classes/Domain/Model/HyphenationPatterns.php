@@ -522,13 +522,17 @@ class HyphenationPatterns
      * modified version of code from hypher.js by Bram Stein, 2011.
      */
     public function hyphenation($text, $preserveHTMLTags = TRUE) {
-                
+
         if (TRUE === $preserveHTMLTags) {
             // Load the text into a DOMDocument, hyphenate and replace all test
-            // nodes recursively and then print the resulting markup DOM
+            // nodes recursively and then print the resulting markup DOM. Watch
+            // the encoding - convert the text to ASCII first, with HTML
+            // entities for all characters outside the range of 7 bit ASCII.
+            // Look here for details: https://stackoverflow.com/questions/11309194/php-domdocument-failing-to-handle-utf-8-characters
+            $asciiText = mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8');
+            
             $domDocument = new \DOMDocument();
-            $domDocument->loadHTML('<?xml encoding="UTF-8">' . '<div>' . $text . '</div>');
-            $domDocument->encoding = 'utf-8';
+            $domDocument->loadHTML('<div>' . $asciiText . '</div>');
             
             // Walk through all text nodes:
             $xPath = new \DOMXPath($domDocument);
