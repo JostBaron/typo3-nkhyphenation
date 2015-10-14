@@ -56,7 +56,7 @@ class StdWrapHookTest
         
         $this->hyphenationPatternsRepositoryMock = $this->getAccessibleMock(
                 'Netzkoenig\\Nkhyphenation\\Domain\\Repository\\HyphenationPatternsRepository',
-                array('findOneBySystemLanguage'),
+                array('findPatternsForSystemLanguage'),
                 array($objectManager)
         );
         
@@ -67,7 +67,7 @@ class StdWrapHookTest
         
         // Connect all the mocks.
         $this->hyphenationPatternsRepositoryMock->expects($this->any())
-                                                ->method('findOneBySystemLanguage')
+                                                ->method('findPatternsForSystemLanguage')
                                                 ->will($this->returnValue($this->hyphenationPatternsMock));
         
         $this->hookClass->expects($this->any())
@@ -248,7 +248,7 @@ class StdWrapHookTest
     public function doHyphenationRespectsIfStdWrapNotUsed() {
         
         $this->hyphenationPatternsRepositoryMock->expects($this->once())
-                                                ->method('findOneBySystemLanguage')
+                                                ->method('findPatternsForSystemLanguage')
                                                 ->with($this->equalTo('0'));
 
         $this->hyphenationPatternsMock->expects($this->once())
@@ -274,7 +274,7 @@ class StdWrapHookTest
     public function doHyphenationRespectsStdWrapForLanguage() {
         
         $this->hyphenationPatternsRepositoryMock->expects($this->once())
-                                                ->method('findOneBySystemLanguage')
+                                                ->method('findPatternsForSystemLanguage')
                                                 ->with($this->equalTo('foo0bar'));
 
         $this->contentRenderObjectMock->expects($this->once())

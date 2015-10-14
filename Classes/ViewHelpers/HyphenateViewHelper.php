@@ -52,7 +52,7 @@ class HyphenateViewHelper
      */
     public function render() {
         
-        $patterns = $this->hyphenationPatternRepository->findOneBySystemLanguage($this->arguments['language']);
+        $patterns = $this->hyphenationPatternRepository->findPatternsForSystemLanguage($this->arguments['language']);
         
         $content = $this->renderChildren();
         

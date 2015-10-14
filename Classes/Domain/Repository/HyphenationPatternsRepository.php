@@ -31,10 +31,42 @@ namespace Netzkoenig\Nkhyphenation\Domain\Repository;
 class HyphenationPatternsRepository
         extends \TYPO3\CMS\Extbase\Persistence\Repository {
 
+	/**
+     * Configuration manager to access TypoScript.
+	 * @var \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface
+     * @inject
+	 */
+	protected $configurationManager;
+
+    /**
+     * Sets the default query settings.
+     */
     public function initializeObject() {        
-        $querySettings = $this->objectManager->create('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\Typo3QuerySettings');
+        $querySettings = $this->objectManager->get('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\Typo3QuerySettings');
         $querySettings->setRespectStoragePage(FALSE);
         $querySettings->setRespectSysLanguage(FALSE);
         $this->setDefaultQuerySettings($querySettings);
+        
+//        $this->configurationManager = $this->objectManager->get('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManagerInterface');
+    }
+    
+    /**
+     * 
+     * @param type $systemLanguage
+     * @return Netzkoenig\Nkhyphenation\Domain\Model\HyphenationPatterns
+     * Returns the hyphenation patterns to use for the given system language,
+     * or NULL if no applicable patterns can be found.
+     */
+    public function findPatternsForSystemLanguage($systemLanguage) {
+        $patternsFromTS = $this->getPatternRecordsFromTypoScript();
+        
+        return $this->findOneBySystemLanguage($systemLanguage);
+    }
+    
+    protected function getPatternRecordsFromTypoScript() {
+
+        var_dump($this->configurationManager->getConfiguration(
+            \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK, 'nkhyphenation'
+        ));
     }
 }
