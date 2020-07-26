@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*******************************************************************************
  * Copyright notice
  * (c) 2013 Jost Baron <j.baron@netzkoenig.de>
