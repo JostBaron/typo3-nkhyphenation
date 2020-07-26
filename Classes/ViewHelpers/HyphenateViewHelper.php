@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Copyright notice
  * (c) 2013 Jost Baron <j.baron@netzkoenig.de>
  * All rights reserved
- * 
+ *
  * This file is part of the TYPO3 extension "nkhyphenation".
  *
  * The TYPO3 extension "nkhyphenation" is free software: you can redistribute
@@ -38,13 +38,16 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class HyphenateViewHelper extends AbstractViewHelper
 {
+    protected $escapeChildren = false;
+    protected $escapeOutput = false;
+
     /**
      * The hyphenation pattern repository.
      *
      * @var HyphenationPatternsRepository
      */
     protected static $hyphenationPatternRepository;
-    
+
     /**
      * Registers the arguments.
      */
@@ -67,8 +70,6 @@ class HyphenateViewHelper extends AbstractViewHelper
 
     /**
      * Actually do the hyphenation.
-     *
-     * @param string $content The content to hyphenate.
      */
     public function render()
     {
@@ -86,7 +87,7 @@ class HyphenateViewHelper extends AbstractViewHelper
         \Closure $renderChildrenClosure,
         RenderingContextInterface $renderingContext
     ) {
-        $patterns = static::getHyphenationPatternRepository()->findOneBySystemLanguage($arguments['language']);
+        $patterns = static::getHyphenationPatternRepository()->findOneBySystemLanguage((int)$arguments['language']);
 
         $content = $renderChildrenClosure();
 

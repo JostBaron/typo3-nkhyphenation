@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Copyright notice
  * (c) 2013 Jost Baron <j.baron@netzkoenig.de>
  * All rights reserved
- * 
+ *
  * This file is part of the TYPO3 extension "nkhyphenation".
  *
  * The TYPO3 extension "nkhyphenation" is free software: you can redistribute
@@ -28,6 +28,7 @@ namespace Netzkoenig\Nkhyphenation\Domain\Model;
 
 use Netzkoenig\Nkhyphenation\Exception\HyphenationException;
 use Netzkoenig\Nkhyphenation\Utility\HyphenatorJSPatternProvider;
+use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Exception;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
@@ -85,7 +86,7 @@ class HyphenationPatterns extends AbstractEntity
      * patterns.
      */
     protected $patternfile;
-    
+
     /**
      * @var string The pattern file format.
      */
@@ -96,17 +97,17 @@ class HyphenationPatterns extends AbstractEntity
      * @var boolean
      */
     protected $dataFromCacheFetched = FALSE;
-    
+
     /**
      * Trie of the hyphenation patterns.
      * @var array
      */
     protected $trie;
-    
+
     /**
      * Data from the pattern file that are not patterns, for example word
      * characters, leftmin and rightmin data.
-     * @type array
+     * @var array
      */
     protected $dataFromFile;
 
@@ -116,9 +117,9 @@ class HyphenationPatterns extends AbstractEntity
      */
     protected function getCache()
     {
-        return $GLOBALS['typo3CacheManager']->getCache('nkhyphenation_cache');
+        return GeneralUtility::makeInstance(CacheManager::class)->getCache('nkhyphenation_cache');
     }
-    
+
     /**
      * @return string The cache identifier for the trie of this pattern set.
      */
@@ -149,13 +150,13 @@ class HyphenationPatterns extends AbstractEntity
             $this->dataFromCacheFetched = true;
         }
     }
-    
+
     /**
      * Writes the current trie to the cache.
      */
     protected function updateCache(): void
     {
-        
+
         $cacheEntry = [
             'dataFromFile' => $this->dataFromFile,
             'trie'         => $this->trie
@@ -195,13 +196,13 @@ class HyphenationPatterns extends AbstractEntity
         $this->makeSureCachedDataIsAvailable();
 
         $this->wordcharacters = $this->sanitizeWordCharacters($this->wordcharacters);
-        
+
         if (isset($this->dataFromFile['wordcharacters'])) {
             $fileWordcharacters = $this->dataFromFile['wordcharacters'];
         } else {
             $fileWordcharacters = [];
         }
-        
+
         return \array_unique(array_merge($this->wordcharacters, $fileWordcharacters));
     }
 
@@ -214,9 +215,9 @@ class HyphenationPatterns extends AbstractEntity
     {
         $this->wordcharacters = $this->sanitizeWordCharacters($wordCharacters);
     }
-    
+
     /**
-     * 
+     *
      * @param string $wordcharacters
      * @return string[]|string|null[]
      * @throws HyphenationException If the
@@ -232,9 +233,9 @@ class HyphenationPatterns extends AbstractEntity
             return [];
         } else {
             throw new HyphenationException(
-                    'The list of word characters must be a string or an array,'
-                    . ' but got \'' . gettype($wordcharacters) . '\' instead.',
-                    1384634628
+                'The list of word characters must be a string or an array,'
+                . ' but got \'' . gettype($wordcharacters) . '\' instead.',
+                1384634628
             );
         }
     }
@@ -267,7 +268,7 @@ class HyphenationPatterns extends AbstractEntity
     public function getLeftmin(): int
     {
         $this->makeSureCachedDataIsAvailable();
-        
+
         return is_null($this->leftmin) ? $this->dataFromFile['leftmin'] : $this->leftmin;
     }
 
@@ -280,7 +281,7 @@ class HyphenationPatterns extends AbstractEntity
     public function setLeftmin(int $leftmin): void
     {
         $this->makeSureCachedDataIsAvailable();
-        
+
         $this->leftmin = $leftmin;
     }
 
@@ -326,7 +327,7 @@ class HyphenationPatterns extends AbstractEntity
     {
         $this->systemLanguage = $systemLanguage;
     }
-    
+
     /**
      * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference The pattern file.
      */
@@ -334,7 +335,7 @@ class HyphenationPatterns extends AbstractEntity
     {
         return $this->patternfile;
     }
-    
+
     /**
      * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $patternfile The new
      * pattern file.
@@ -343,7 +344,7 @@ class HyphenationPatterns extends AbstractEntity
     {
         $this->patternfile = $patternfile;
     }
-    
+
     /**
      * @return string The pattern file format.
      */
@@ -351,7 +352,7 @@ class HyphenationPatterns extends AbstractEntity
     {
         return $this->patternfileformat;
     }
-    
+
     /**
      * @param string $patternfileFormat The new pattern file format.
      */
@@ -405,7 +406,7 @@ class HyphenationPatterns extends AbstractEntity
         if (!isset($this->trie)) {
             $this->trie = [];
         }
-        
+
         $currentTrie =& $this->trie;
 
         foreach ($characters as $character) {
@@ -420,12 +421,12 @@ class HyphenationPatterns extends AbstractEntity
         foreach ($points as $point) {
             array_push($currentTrie['points'], ($point === '') ? 0 : intval($point));
         }
-        
+
         if ($updateCache) {
             $this->updateCache();
         }
     }
-    
+
     /**
      * Fill this pattern-object from a patternProvider.
      *
@@ -436,22 +437,22 @@ class HyphenationPatterns extends AbstractEntity
     protected function readPatternFile($patternProvider): void
     {
         $patternList = $patternProvider->getPatternList();
-        
+
         foreach ($patternList as $pattern) {
             // Don't update the cache, do that once at the end of this method
             $this->insertPatternIntoTrie($pattern, FALSE);
         }
-        
+
         $this->dataFromFile = [
             'leftmin'        => $patternProvider->getMinCharactersBeforeFirstHyphen(),
             'rightmin'       => $patternProvider->getMinCharactersAfterLastHyphen(),
             'wordcharacters' => $patternProvider->getWordCharacterList(),
         ];
-        
+
         // Update the cache, needed since not done above.
         $this->updateCache();
     }
-    
+
     /**
      * Builds the trie from the current pattern file.
      */
@@ -459,7 +460,7 @@ class HyphenationPatterns extends AbstractEntity
     {
         if (!\is_null($this->patternfile)) {
             $patternfileContent = $this->patternfile->getOriginalResource()->getContents();
-            
+
             switch ($this->patternfileformat) {
                 case 'hyphenatorjs':
                     $patternprovider = GeneralUtility::makeInstance(
@@ -502,7 +503,7 @@ class HyphenationPatterns extends AbstractEntity
 
             // Start from the root of the TRIE
             $currentTrieNode = $this->getTrie();
-            
+
             for ($j = $i; $j < $numberCharacters; $j++) {
 
                 // The character currently inspected
@@ -531,12 +532,12 @@ class HyphenationPatterns extends AbstractEntity
         // Get the original characters to build the result. The $characters
         // array had strtolower applied to it.
         $originalCharacters = preg_split('//u', $word, -1, PREG_SPLIT_NO_EMPTY);
-        
+
         for ($i = 1; $i < $numberCharacters - 1; $i++) {
             if (   (($points[$i] % 2) === 1)
                 && ($this->getLeftmin() < $i)
                 && ($i < ($numberCharacters - $this->getRightmin()))
-               ) {
+            ) {
 
                 \array_push($result, $part);
                 $part = $originalCharacters[$i-1];
@@ -571,14 +572,14 @@ class HyphenationPatterns extends AbstractEntity
             // entities for all characters outside the range of 7 bit ASCII.
             // Look here for details: https://stackoverflow.com/questions/11309194/php-domdocument-failing-to-handle-utf-8-characters
             $asciiText = \mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8');
-            
+
             $domDocument = new \DOMDocument();
             $domDocument->loadHTML('<div>' . $asciiText . '</div>');
-            
+
             // Walk through all text nodes:
             $xPath = new \DOMXPath($domDocument);
             $textNodes = $xPath->query('//text()');
-            
+
             foreach ($textNodes as $textNode) {
                 // Hyphenate the text node content, don't preserve HTML tags
                 // there this time.
@@ -588,16 +589,16 @@ class HyphenationPatterns extends AbstractEntity
                 $hyphenatedNode = $domDocument->createTextNode($hyphenatedText);
                 $textNode->parentNode->replaceChild($hyphenatedNode, $textNode);
             }
-            
+
             // Generate the hyphenated HTML fragment
             $result = $domDocument->saveHTML($xPath->query('/html/body/div')->item(0));
             $result = \mb_substr($result, 5);
             $result = \mb_substr($result, 0, -6);
-            
+
             unset($textNodes);
             unset($domDocument);
             unset($xPath);
-            
+
             return $result;
         }
 
@@ -613,11 +614,11 @@ class HyphenationPatterns extends AbstractEntity
         $thisInstance = $this;
 
         return \preg_replace_callback(
-                $wordSplittingRegex,
-                function($matches) use ($thisInstance) {
-                    return $thisInstance->hyphenateWord($matches[1]);
-                },
-                $text
+            $wordSplittingRegex,
+            function($matches) use ($thisInstance) {
+                return $thisInstance->hyphenateWord($matches[1]);
+            },
+            $text
         );
     }
 }

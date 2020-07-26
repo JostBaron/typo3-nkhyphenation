@@ -38,7 +38,7 @@ class HyphenationPatternsRepository extends Repository
 {
     public function initializeObject()
     {
-        $querySettings = $this->objectManager->create(Typo3QuerySettings::class);
+        $querySettings = $this->objectManager->get(Typo3QuerySettings::class);
         $querySettings->setRespectStoragePage(FALSE);
         $querySettings->setRespectSysLanguage(FALSE);
         $this->setDefaultQuerySettings($querySettings);
