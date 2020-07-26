@@ -156,10 +156,10 @@ class HyphenationPatterns extends AbstractEntity
     protected function updateCache(): void
     {
         
-        $cacheEntry = array(
+        $cacheEntry = [
             'dataFromFile' => $this->dataFromFile,
             'trie'         => $this->trie
-        );
+        ];
 
         $trieCacheInstance = $this->getCache();
         $trieCacheInstance->set($this->getCacheIdentifier(), $cacheEntry);
@@ -376,8 +376,7 @@ class HyphenationPatterns extends AbstractEntity
      */
     public function resetTrie(): void
     {
-        
-        $this->trie = array();
+        $this->trie = [];
         $this->updateCache();
     }
 
@@ -404,20 +403,20 @@ class HyphenationPatterns extends AbstractEntity
         $points = preg_split('/[\D]/', $pattern);
 
         if (!isset($this->trie)) {
-            $this->trie = array();
+            $this->trie = [];
         }
         
         $currentTrie =& $this->trie;
 
         foreach ($characters as $character) {
             if (!array_key_exists($character, $currentTrie)) {
-                $currentTrie[$character] = array();
+                $currentTrie[$character] = [];
             }
 
             $currentTrie =& $currentTrie[$character];
         }
 
-        $currentTrie['points'] = array();
+        $currentTrie['points'] = [];
         foreach ($points as $point) {
             array_push($currentTrie['points'], ($point === '') ? 0 : intval($point));
         }

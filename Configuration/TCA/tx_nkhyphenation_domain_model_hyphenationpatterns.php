@@ -27,8 +27,22 @@ if (!defined('TYPO3_MODE')) {
 
 $ll = 'LLL:EXT:nkhyphenation/Resources/Private/Language/locallang_db.xml:';
 
-$GLOBALS['TCA']['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
-    'ctrl' => $GLOBALS['TCA']['tx_nkhyphenation_domain_model_hyphenationpatterns']['ctrl'],
+$GLOBALS['TCA']['tx_nkhyphenation_domain_model_hyphenationpatterns'] = [
+    'ctrl' => [
+        'ctrl' => [
+            'title' => 'LLL:EXT:nkhyphenation/Resources/Private/Language/locallang_db.xml:hyphenationpatterns_recordlabel',
+            'label' => 'title',
+            'tstamp'    => 'tstamp',
+            'crdate'    => 'crdate',
+            'cruser_id' => 'cruser_id',
+            'dividers2tabs' => 1,
+            'delete' => 'deleted',
+            'enablecolumns' => [
+                'disabled' => 'hidden',
+            ],
+            'searchFields' => 'uid,title',
+        ],
+    ],
     'columns' => [
         'pid' => [
             'label'   => 'pid',
@@ -151,4 +165,4 @@ $GLOBALS['TCA']['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
             'showitem' => 'hidden,title,system_language,wordcharacters,hyphen,leftmin,rightmin,patternfile,patternfileformat',
         ],
     ],
-);
+];

@@ -135,11 +135,11 @@ class StdWrapHook implements ContentObjectStdWrapHookInterface
     ) {
 
         // Get the language (after some stdWrap processing)
-        $languageValue = filter_var($configuration['language'], FILTER_VALIDATE_INT, array('min_range' => 0));
+        $languageValue = filter_var($configuration['language'], FILTER_VALIDATE_INT, ['min_range' => 0]);
         
         if (isset($configuration['language.'])) {
             $languageProperties = $configuration['language.'];
-            $languageStdWrapProperties = isset($languageProperties['stdWrap.']) ? $languageProperties['stdWrap.'] : array();
+            $languageStdWrapProperties = isset($languageProperties['stdWrap.']) ? $languageProperties['stdWrap.'] : [];
             
             $languageValue = $parentObject->stdWrap($languageValue, $languageStdWrapProperties);
         }
@@ -149,7 +149,7 @@ class StdWrapHook implements ContentObjectStdWrapHookInterface
         
         if (isset($configuration['preserveHtmlTags.'])) {
             $preserveHtmlTagsProperties = $configuration['preserveHtmlTags.'];
-            $preserveHtmlTagsStdWrapProperties = isset($preserveHtmlTagsProperties['stdWrap.']) ? $preserveHtmlTagsProperties['stdWrap.'] : array();
+            $preserveHtmlTagsStdWrapProperties = isset($preserveHtmlTagsProperties['stdWrap.']) ? $preserveHtmlTagsProperties['stdWrap.'] : [];
             
             $preserveHtmlTags = $parentObject->stdWrap($preserveHtmlTags, $preserveHtmlTagsStdWrapProperties);
         }

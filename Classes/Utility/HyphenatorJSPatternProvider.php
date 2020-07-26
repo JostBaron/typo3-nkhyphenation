@@ -89,7 +89,7 @@ class HyphenatorJSPatternProvider
 
         foreach ($parsedInput['patterns'] as $patternLength => $patterns) {
             $patternLength = intval($patternLength);
-            $patternsWithLength = array();
+            $patternsWithLength = [];
             preg_match_all('/.{' . $patternLength . '}/u', $patterns, $patternsWithLength);
             
             // Add the patterns to the pattern list
