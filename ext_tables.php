@@ -28,48 +28,31 @@ if (!defined('TYPO3_MODE')) {
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages(
     'tx_nkhyphenation_domain_model_hyphenationpatterns'
 );
-$GLOBALS['TCA']['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
-    'ctrl' => array(
-        'title' => 'LLL:EXT:nkhyphenation/Resources/Private/Language/locallang_db.xml:hyphenationpatterns_recordlabel',
-        'label' => 'title',
-        'tstamp'    => 'tstamp',
-        'crdate'    => 'crdate',
-        'cruser_id' => 'cruser_id',
-        'dividers2tabs' => 1,
-        'delete' => 'deleted',
-        'enablecolumns' => array(
-            'disabled' => 'hidden',
-        ),
-        'dynamicConfigFile' =>
-            \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY) . 'Configuration/Tca/hyphenationpatterns.php',
-        'searchFields' => 'uid,title',
-    ),
-);
 
 // Help texts for the backend forms.
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr(
     'tx_nkhyphenation_domain_model_hyphenationpatterns',
-    'EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_hyphenationpatterns_csh.xml'
+    'EXT:nkhyphenation/Resources/Private/Language/locallang_hyphenationpatterns_csh.xml'
 );
 
 // Register static templates
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
-    $_EXTKEY,
+    'nkhyphenation',
     'Configuration/TypoScript',
     'Hyphenation - basic settings'
 );
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
-    $_EXTKEY,
+    'nkhyphenation',
     'Configuration/TypoScript/csc-6.0',
     'Hyphenation for CSS Styled Content 6.0'
 );
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
-    $_EXTKEY,
+    'nkhyphenation',
     'Configuration/TypoScript/csc-6.1',
     'Hyphenation for CSS Styled Content 6.1'
 );
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
-    $_EXTKEY,
+    'nkhyphenation',
     'Configuration/TypoScript/csc-6.2',
     'Hyphenation for CSS Styled Content 6.2'
 );
