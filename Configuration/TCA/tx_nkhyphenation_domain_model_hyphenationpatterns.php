@@ -71,6 +71,7 @@ $GLOBALS['TCA']['tx_nkhyphenation_domain_model_hyphenationpatterns'] = [
             'label'  => 'LLL:EXT:cms/locallang_ttc.xml:sys_language_uid_formlabel',
             'config' => [
                 'type'                => 'select',
+                'renderType'          => 'selectSingle',
                 'foreign_table'       => 'sys_language',
                 'foreign_table_where' => 'ORDER BY sys_language.title',
                 'items' => [
@@ -80,7 +81,7 @@ $GLOBALS['TCA']['tx_nkhyphenation_domain_model_hyphenationpatterns'] = [
         ],
         'hidden' => [
             'exclude' => 1,
-            'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
+            'label'   => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.visible',
             'config'  => [
                 'type'    => 'check',
                 'default' => '0',
@@ -152,6 +153,7 @@ $GLOBALS['TCA']['tx_nkhyphenation_domain_model_hyphenationpatterns'] = [
             'exclude' => 1,
             'config'  => [
                 'type' => 'select',
+                'renderType' => 'selectSingle',
                 'items' => [
                     [$ll . 'hyphenationpatterns_patternfileformat_hyphenatorjs_itemtext', 'hyphenatorjs'],
                 ]
