@@ -25,8 +25,10 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_nkhyphenation_domain_model_hyphenationpatterns');
-$TCA['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages(
+    'tx_nkhyphenation_domain_model_hyphenationpatterns'
+);
+$GLOBALS['TCA']['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
     'ctrl' => array(
         'title' => 'LLL:EXT:nkhyphenation/Resources/Private/Language/locallang_db.xml:hyphenationpatterns_recordlabel',
         'label' => 'title',

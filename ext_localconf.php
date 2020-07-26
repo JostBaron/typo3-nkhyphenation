@@ -26,12 +26,12 @@ if (!defined('TYPO3_MODE')) {
 }
 
 // Register cache for the tries
-if (!is_array($TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['nkhyphenation_cache'])) {
-    $TYPO3_CONF_VARS['SYS']['caching']['cacheConfigurations']['nkhyphenation_cache'] = array();
+if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['nkhyphenation_cache'])) {
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['nkhyphenation_cache'] = array();
 }
 
 // Register hook for stdWrap
-$TYPO3_CONF_VARS['SC_OPTIONS']['tslib/class.tslib_content.php']['stdWrap'][] =
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_content.php']['stdWrap'][] =
         'EXT:nkhyphenation/Classes/Hooks/StdWrapHook.php:&Netzkoenig\\Nkhyphenation\\Hooks\\StdWrapHook';
 
 // Register hook for the pagerenderer to include js file
