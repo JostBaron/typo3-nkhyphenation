@@ -28,19 +28,19 @@ namespace Netzkoenig\Nkhyphenation\Utility;
  * Hyphenator.js pattern files.
  * @author Jost Baron <j.baron@netzkoenig.de>
  */
-class HyphenatorJSPatternProvider {
-    
+class HyphenatorJSPatternProvider
+{
     /**
      * List of patterns.
      * @var array
      */
-    protected $patternList = array();
+    protected $patternList = [];
     
     /**
      * List of word characters.
      * @var array
      */
-    protected $wordCharacterList = array();
+    protected $wordCharacterList = [];
     
     
     /**
@@ -54,29 +54,30 @@ class HyphenatorJSPatternProvider {
      */
     protected $minCharactersBeforeFirstHyphen;
     
-    public function __construct($filecontent) {
+    public function __construct(string $filecontent)
+    {
         /*
          * The following is a bit hackish. In order not to use a complete
          * JS-Parser to read the input, try to transform the input to a valid
-         * JSON string and parser that using built-in functions.
+         * JSON string and parse that using built-in functions.
          */
         
         // First, strip the assignment
-        $jsonInput = preg_replace('/^[^=]*=/u', '', $filecontent);
+        $jsonInput = \preg_replace('/^[^=]*=/u', '', $filecontent);
 
         // Remove trailing ';':
-        $jsonInput = preg_replace('/\s*;\s*$/u', '', $jsonInput);
+        $jsonInput = \preg_replace('/\s*;\s*$/u', '', $jsonInput);
 
         // Now replace all object keys with themself in a quoted version.
         $regex = '/((?:,|\{)\s*)([^:\s\'\"]+)(\s*:\s*)([^,\{]*|(?:\"[^\"\n]*\"))/u';
-        $jsonInput = preg_replace($regex, '$1"$2"$3$4', $jsonInput);        
+        $jsonInput = \preg_replace($regex, '$1"$2"$3$4', $jsonInput);
 
         // And replace all single quotes by double quotes (assuming they don't
-        // belong to the data...
-        $jsonInput = preg_replace("/'/u", '"', $jsonInput);
+        // belong to the data...)
+        $jsonInput = \preg_replace("/'/u", '"', $jsonInput);
         
         // Decode file
-        $parsedInput = json_decode($jsonInput, true);
+        $parsedInput = \json_decode($jsonInput, true);
         
         
         // Now fill the variables with the file contents.
@@ -104,14 +105,16 @@ class HyphenatorJSPatternProvider {
     /**
      * @return array A list of patterns to use, order doesn't matter.
      */
-    public function getPatternList() {
+    public function getPatternList(): array
+    {
         return $this->patternList;
     }
 
     /**
      * @return array The list of word characters, each as a one-letter string.
      */
-    public function getWordCharacterList() {
+    public function getWordCharacterList(): array
+    {
         return $this->wordCharacterList;
     }
     
@@ -119,7 +122,8 @@ class HyphenatorJSPatternProvider {
      * @return int The minimal number of characters that must occur before the
      * first hyphen.
      */
-    public function getMinCharactersBeforeFirstHyphen() {
+    public function getMinCharactersBeforeFirstHyphen(): int
+    {
         return $this->minCharactersBeforeFirstHyphen;
     }
     
@@ -127,7 +131,8 @@ class HyphenatorJSPatternProvider {
      * @return int The minimal number of characters that must occur after the
      * last hyphen.
      */
-    public function getMinCharactersAfterLastHyphen() {
+    public function getMinCharactersAfterLastHyphen(): int
+    {
         return $this->minCharactersAfterLastHyphen;
     }
 }

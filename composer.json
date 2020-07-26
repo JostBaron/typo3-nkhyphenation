@@ -1,0 +1,26 @@
+{
+  "name": "netzkoenig/nkhyphenation",
+  "description": "TYPO3 extension for hyphenating texts.",
+  "type": "typo3-cms-extension",
+  "license": "MIT",
+  "keywords": [
+    "TYPO3 CMS"
+  ],
+  "authors": [
+    {
+      "name": "Jost Baron",
+      "email": "j.baron@netzkoenig.de",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Netzkoenig\\Nkhyphenation\\": "Classes/"
+    }
+  },
+  "require": {
+    "php": "^7.2",
+    "typo3/cms-extbase": "^10.4",
+    "typo3/cms-fluid": "^10.4"
+  }
+}

@@ -6,3 +6,7 @@ nbproject
 /Documentation/10+20+30_conf_py.yml
 /Documentation/20_GlobalSettings.yml
 /Documentation/build/
+/vendor/
+/public/
+/composer.lock
+/.idea

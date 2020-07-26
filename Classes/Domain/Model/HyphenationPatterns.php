@@ -23,6 +23,13 @@
 
 namespace Netzkoenig\Nkhyphenation\Domain\Model;
 
+use Netzkoenig\Nkhyphenation\Exception\HyphenationException;
+use Netzkoenig\Nkhyphenation\Utility\HyphenatorJSPatternProvider;
+use TYPO3\CMS\Core\Exception;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Domain\Model\FileReference;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+
 /**
  * Contains a set of hyphenation patterns. The patterns are stored in a file,
  * but are also stored as serialized trie in the database, in order to make
@@ -30,9 +37,8 @@ namespace Netzkoenig\Nkhyphenation\Domain\Model;
  *
  * @author Jost Baron <j.baron@netzkoenig.de>
  */
-class HyphenationPatterns
-    extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
-
+class HyphenationPatterns extends AbstractEntity
+{
     /**
      * Title of this pattern set.
      * @var string
@@ -105,27 +111,27 @@ class HyphenationPatterns
      * @return \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface The cache
      * frontend for the tries.
      */
-    protected function getCache() {
+    protected function getCache()
+    {
         return $GLOBALS['typo3CacheManager']->getCache('nkhyphenation_cache');
     }
     
     /**
      * @return string The cache identifier for the trie of this pattern set.
      */
-    protected function getCacheIdentifier() {
+    protected function getCacheIdentifier(): string
+    {
         return 'hyphenationPatterns-' . $this->getUid();
     }
 
     /**
      * Fetch the data from the patternfile that is cached.
      */
-    protected function makeSureCachedDataIsAvailable() {
-        
+    protected function makeSureCachedDataIsAvailable(): void
+    {
         if ($this->dataFromCacheFetched) {
             return;
-        }
-        else {
-
+        } else {
             $cacheInstance = $this->getCache();
 
             if (!$cacheInstance->has($this->getCacheIdentifier())) {
@@ -137,14 +143,15 @@ class HyphenationPatterns
             $this->trie         = $cacheEntry['trie'];
             $this->dataFromFile = $cacheEntry['dataFromFile'];
 
-            $this->dataFromCacheFetched = TRUE;
+            $this->dataFromCacheFetched = true;
         }
     }
     
     /**
      * Writes the current trie to the cache.
      */
-    protected function updateCache() {
+    protected function updateCache(): void
+    {
         
         $cacheEntry = array(
             'dataFromFile' => $this->dataFromFile,
@@ -159,7 +166,8 @@ class HyphenationPatterns
      * Returns the title of the record.
      * @return string
      */
-    public function getTitle() {
+    public function getTitle(): string
+    {
         return $this->title;
     }
 
@@ -167,58 +175,60 @@ class HyphenationPatterns
      * Sets the title of the record.
      * @param string $title
      */
-    public function setTitle($title) {
+    public function setTitle($title): void
+    {
         $this->title = $title;
     }
 
     /**
      * Returns the word characters (the ones that define what a word is).
-     * @return array
+     *
+     * @return string[]
+     *
+     * @throws HyphenationException
      */
-    public function getWordcharacters() {
-        
+    public function getWordcharacters(): array
+    {
         $this->makeSureCachedDataIsAvailable();
 
         $this->wordcharacters = $this->sanitizeWordCharacters($this->wordcharacters);
         
         if (isset($this->dataFromFile['wordcharacters'])) {
             $fileWordcharacters = $this->dataFromFile['wordcharacters'];
-        }
-        else {
-            $fileWordcharacters = array();
+        } else {
+            $fileWordcharacters = [];
         }
         
-        return array_unique(array_merge($this->wordcharacters, $fileWordcharacters));
+        return \array_unique(array_merge($this->wordcharacters, $fileWordcharacters));
     }
 
     /**
      * Sets the word characters to use.
-     * @param mixed $wordCharacters
+     *
+     * @param string[]|string|null $wordCharacters
      */
-    public function setWordcharacters($wordCharacters) {
+    public function setWordcharacters($wordCharacters): void
+    {
         $this->wordcharacters = $this->sanitizeWordCharacters($wordCharacters);
     }
     
     /**
      * 
-     * @param type $wordcharacters
-     * @return type
-     * @throws \Netzkoenig\Nkhyphenation\Exception\HyphenationException If the
+     * @param string $wordcharacters
+     * @return string[]|string|null[]
+     * @throws HyphenationException If the
      * parameter is neither null, an array nor a string.
      */
-    public function sanitizeWordCharacters($wordcharacters) {
-        
-        if (is_array($wordcharacters)) {
+    public function sanitizeWordCharacters($wordcharacters): array
+    {
+        if (\is_array($wordcharacters)) {
             return $wordcharacters;
-        }
-        else if (is_string($wordcharacters)) {
-            return preg_split('//u', $wordcharacters, -1, PREG_SPLIT_NO_EMPTY);
-        }
-        else if (is_null($wordcharacters)) {
-            return array();
-        }
-        else {
-            throw new \Netzkoenig\Nkhyphenation\Exception\HyphenationException(
+        } else if (\is_string($wordcharacters)) {
+            return \preg_split('//u', $wordcharacters, -1, PREG_SPLIT_NO_EMPTY);
+        } else if (\is_null($wordcharacters)) {
+            return [];
+        } else {
+            throw new HyphenationException(
                     'The list of word characters must be a string or an array,'
                     . ' but got \'' . gettype($wordcharacters) . '\' instead.',
                     1384634628
@@ -230,7 +240,8 @@ class HyphenationPatterns
      * Returns the hyphen to use, as UTF-8 string with decoded entities.
      * @return string
      */
-    public function getHyphen() {
+    public function getHyphen(): string
+    {
         return html_entity_decode($this->hyphen, ENT_COMPAT | ENT_HTML401, 'UTF-8');
     }
 
@@ -238,7 +249,8 @@ class HyphenationPatterns
      * Set the hyphen to use.
      * @param string $hyphen
      */
-    public function setHyphen($hyphen) {
+    public function setHyphen(string $hyphen)
+    {
         $this->hyphen = $hyphen;
     }
 
@@ -246,10 +258,11 @@ class HyphenationPatterns
      * Returns the minimal number of characters in a word that must occur before
      * a hyphen. The value from the pattern record takes precedence over any
      * value from a pattern file.
+     *
      * @return int
      */
-    public function getLeftmin() {
-        
+    public function getLeftmin(): int
+    {
         $this->makeSureCachedDataIsAvailable();
         
         return is_null($this->leftmin) ? $this->dataFromFile['leftmin'] : $this->leftmin;
@@ -258,10 +271,11 @@ class HyphenationPatterns
     /**
      * Sets the minimal number of characters in a word that must occur before a
      * hyphen.
+     *
      * @param int $leftmin
      */
-    public function setLeftmin($leftmin) {
-        
+    public function setLeftmin(int $leftmin): void
+    {
         $this->makeSureCachedDataIsAvailable();
         
         $this->leftmin = $leftmin;
@@ -271,41 +285,50 @@ class HyphenationPatterns
      * Returns the minimal number of characters in a word that must occur after
      * a hyphen. The value from the pattern record takes precedence over any
      * value from a pattern file.
+     *
      * @return int
      */
-    public function getRightmin() {        
+    public function getRightmin(): int
+    {
         return is_null($this->rightmin) ? $this->dataFromFile['rightmin'] : $this->rightmin;
     }
 
     /**
      * Sets the minimal number of characters in a word that must occur after a
      * hyphen.
+     *
      * @param int $rightmin
      */
-    public function setRightmin($rightmin) {
+    public function setRightmin(int $rightmin): void
+    {
         $this->rightmin = $rightmin;
     }
 
     /**
      * Returns the system language this patternset is for.
+     *
      * @return int
      */
-    public function getSystemLanguage() {
+    public function getSystemLanguage(): int
+    {
         return $this->systemLanguage;
     }
 
     /**
      * Sets the system language this patternset ist for.
+     *
      * @param int $systemLanguage
      */
-    public function setSystemLanguage($systemLanguage) {
+    public function setSystemLanguage(int $systemLanguage): void
+    {
         $this->systemLanguage = $systemLanguage;
     }
     
     /**
      * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference The pattern file.
      */
-    public function getPatternfile() {
+    public function getPatternfile(): FileReference
+    {
         return $this->patternfile;
     }
     
@@ -313,29 +336,34 @@ class HyphenationPatterns
      * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $patternfile The new
      * pattern file.
      */
-    public function setPatternfile(\TYPO3\CMS\Extbase\Domain\Model\FileReference $patternfile) {
+    public function setPatternfile(FileReference $patternfile)
+    {
         $this->patternfile = $patternfile;
     }
     
     /**
      * @return string The pattern file format.
      */
-    public function getPatternfileformat() {
+    public function getPatternfileformat(): string
+    {
         return $this->patternfileformat;
     }
     
     /**
-     * @param sring $patternfileFormat The new pattern file format.
+     * @param string $patternfileFormat The new pattern file format.
      */
-    public function setPatternfileformat($patternfileFormat) {
+    public function setPatternfileformat(string $patternfileFormat): void
+    {
         $this->patternfileformat = $patternfileFormat;
     }
 
     /**
      * Returns the hyphenation-TRIE.
+     *
      * @return array
      */
-    public function getTrie() {
+    public function getTrie(): array
+    {
         return $this->trie;
     }
 
@@ -343,7 +371,8 @@ class HyphenationPatterns
      * Empties the trie.
      * @return void
      */
-    public function resetTrie() {
+    public function resetTrie(): void
+    {
         
         $this->trie = array();
         $this->updateCache();
@@ -351,6 +380,7 @@ class HyphenationPatterns
 
     /**
      * Inserts a pattern into a hyphenation trie.
+     *
      * @param string $pattern The pattern to insert.
      * @param boolean $updateCache Defines if the cached trie should be
      * updated. This is useful if many patterns will be inserted
@@ -358,13 +388,15 @@ class HyphenationPatterns
      * cache after each pattern. If you set this to false, make sure you update
      * the cache manually afterwards or set the parameter to true when inserting
      * the last pattern.
+     *
      * @return void
+     *
      * @license The code of this method is heavily inspired (but not simply
      * ported) by a code piece from Hyphenator.js. The code there is in turn a
      * modified version of code from hypher.js by Bram Stein, 2011.
      */
-    public function insertPatternIntoTrie($pattern, $updateCache = TRUE) {
-        
+    public function insertPatternIntoTrie(string $pattern, bool $updateCache = true): void
+    {
         $characters = preg_split('//u', preg_replace('/\d/', '', $pattern), -1, PREG_SPLIT_NO_EMPTY);
         $points = preg_split('/[\D]/', $pattern);
 
@@ -387,17 +419,20 @@ class HyphenationPatterns
             array_push($currentTrie['points'], ($point === '') ? 0 : intval($point));
         }
         
-        if (TRUE === $updateCache) {
+        if ($updateCache) {
             $this->updateCache();
         }
     }
     
     /**
      * Fill this pattern-object from a patternProvider.
+     *
      * @param \Netzkoenig\Nkhyphenation\Utility\AbstractPatternProvider $patternProvider
+     *
+     * @return void
      */
-    protected function readPatternFile($patternProvider) {
-        
+    protected function readPatternFile($patternProvider): void
+    {
         $patternList = $patternProvider->getPatternList();
         
         foreach ($patternList as $pattern) {
@@ -405,11 +440,11 @@ class HyphenationPatterns
             $this->insertPatternIntoTrie($pattern, FALSE);
         }
         
-        $this->dataFromFile = array(
+        $this->dataFromFile = [
             'leftmin'        => $patternProvider->getMinCharactersBeforeFirstHyphen(),
             'rightmin'       => $patternProvider->getMinCharactersAfterLastHyphen(),
             'wordcharacters' => $patternProvider->getWordCharacterList(),
-        );
+        ];
         
         // Update the cache, needed since not done above.
         $this->updateCache();
@@ -418,21 +453,20 @@ class HyphenationPatterns
     /**
      * Builds the trie from the current pattern file.
      */
-    public function buildCache() {
-        
-        if (!is_null($this->patternfile)) {
-        
+    public function buildCache(): void
+    {
+        if (!\is_null($this->patternfile)) {
             $patternfileContent = $this->patternfile->getOriginalResource()->getContents();
             
             switch ($this->patternfileformat) {
                 case 'hyphenatorjs':
-                    $patternprovider = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-                            '\\Netzkoenig\\Nkhyphenation\\Utility\\HyphenatorJSPatternProvider',
-                            $patternfileContent
+                    $patternprovider = GeneralUtility::makeInstance(
+                        HyphenatorJSPatternProvider::class,
+                        $patternfileContent
                     );
                     break;
                 default:
-                    throw new \TYPO3\CMS\Core\Exception('Unknown pattern file format.', 1385210987);
+                    throw new Exception('Unknown pattern file format.', 1385210987);
             }
 
             $this->resetTrie();
@@ -440,23 +474,26 @@ class HyphenationPatterns
         }
         else {
             $this->resetTrie();
-            $this->trie = array();
+            $this->trie = [];
             $this->updateCache();
         }
     }
 
     /**
      * Hyphenation of a single word.
+     *
      * @param string $word The word to hyphenate.
+     *
      * @return string The word with hyphens inserted.
+     *
      * @license The code of this method is heavily inspired (but not a simple
      * port) of a code piece from Hyphenator.js. The code there is in turn a
      * modified version of code from hypher.js by Bram Stein, 2011.
      */
-    public function hyphenateWord($word) {
-
-        $characters = preg_split('//u', mb_strtolower('.' . $word . '.', 'UTF-8'), -1, PREG_SPLIT_NO_EMPTY);
-        $points = array_fill(0, count($characters), 0);
+    public function hyphenateWord(string $word): string
+    {
+        $characters = \preg_split('//u', \mb_strtolower('.' . $word . '.', 'UTF-8'), -1, PREG_SPLIT_NO_EMPTY);
+        $points = \array_fill(0, \count($characters), 0);
 
         $numberCharacters = count($characters);
         for ($i = 0; $i < $numberCharacters; $i++) {
@@ -486,7 +523,7 @@ class HyphenationPatterns
             }
         }
 
-        $result = array();
+        $result = [];
         $part = '';
 
         // Get the original characters to build the result. The $characters
@@ -499,7 +536,7 @@ class HyphenationPatterns
                 && ($i < ($numberCharacters - $this->getRightmin()))
                ) {
 
-                array_push($result, $part);
+                \array_push($result, $part);
                 $part = $originalCharacters[$i-1];
             }
             else {
@@ -508,28 +545,30 @@ class HyphenationPatterns
         }
 
         // Push the last part.
-        array_push($result, $part);
+        \array_push($result, $part);
 
-        return implode($this->getHyphen(), $result);
+        return \implode($this->getHyphen(), $result);
     }
 
     /**
      * Hyphenates a text.
+     *
      * @param string $text The text to hyphenate.
      * @return string
+     *
      * @license The code of this method is heavily inspired (but not a simple
      * port) of a code piece from Hyphenator.js. The code there is in turn a
      * modified version of code from hypher.js by Bram Stein, 2011.
      */
-    public function hyphenation($text, $preserveHTMLTags = TRUE) {
-
-        if (TRUE === $preserveHTMLTags) {
+    public function hyphenation($text, $preserveHTMLTags = true): string
+    {
+        if ($preserveHTMLTags) {
             // Load the text into a DOMDocument, hyphenate and replace all test
             // nodes recursively and then print the resulting markup DOM. Watch
             // the encoding - convert the text to ASCII first, with HTML
             // entities for all characters outside the range of 7 bit ASCII.
             // Look here for details: https://stackoverflow.com/questions/11309194/php-domdocument-failing-to-handle-utf-8-characters
-            $asciiText = mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8');
+            $asciiText = \mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8');
             
             $domDocument = new \DOMDocument();
             $domDocument->loadHTML('<div>' . $asciiText . '</div>');
@@ -550,8 +589,8 @@ class HyphenationPatterns
             
             // Generate the hyphenated HTML fragment
             $result = $domDocument->saveHTML($xPath->query('/html/body/div')->item(0));
-            $result = mb_substr($result, 5);
-            $result = mb_substr($result, 0, -6);
+            $result = \mb_substr($result, 5);
+            $result = \mb_substr($result, 0, -6);
             
             unset($textNodes);
             unset($domDocument);
@@ -559,26 +598,24 @@ class HyphenationPatterns
             
             return $result;
         }
-        else {
-        
-            // Characters that are part of a word: \u200C is a zero-width space,
-            // \u00AD is the soft-hyphen &shy;
-            $unicodeWordCharacters = preg_split('//u', json_decode('"\u200C\u00AD"'), -1, PREG_SPLIT_NO_EMPTY);
 
-            $wordCharacters = $this->getWordcharacters();
-            $wordCharacters = array_merge($wordCharacters, $unicodeWordCharacters);
+        // Characters that are part of a word: \u200C is a zero-width space,
+        // \u00AD is the soft-hyphen &shy;
+        $unicodeWordCharacters = \preg_split('//u', \json_decode('"\u200C\u00AD"'), -1, PREG_SPLIT_NO_EMPTY);
 
-            $wordSplittingRegex = '/((?:' . implode('|', $wordCharacters) . ')+)/iu';
+        $wordCharacters = $this->getWordcharacters();
+        $wordCharacters = \array_merge($wordCharacters, $unicodeWordCharacters);
 
-            $thisInstance = $this;
+        $wordSplittingRegex = '/((?:' . \implode('|', $wordCharacters) . ')+)/iu';
 
-            return preg_replace_callback(
-                    $wordSplittingRegex,
-                    function($matches) use ($thisInstance) {
-                        return $thisInstance->hyphenateWord($matches[1]);
-                    },
-                    $text
-            );
-        }
+        $thisInstance = $this;
+
+        return \preg_replace_callback(
+                $wordSplittingRegex,
+                function($matches) use ($thisInstance) {
+                    return $thisInstance->hyphenateWord($matches[1]);
+                },
+                $text
+        );
     }
 }

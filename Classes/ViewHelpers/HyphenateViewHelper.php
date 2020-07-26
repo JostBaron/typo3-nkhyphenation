@@ -23,16 +23,16 @@
 
 namespace Netzkoenig\Nkhyphenation\ViewHelpers;
 
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+
 /**
- * Description of HyphenationViewHelper
- *
  * @author Jost Baron <j.baron@netzkoenig.de>
  */
-class HyphenateViewHelper
-        extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
-    
+class HyphenateViewHelper extends AbstractViewHelper
+{
     /**
-     * The hyphenation pattern repository
+     * The hyphenation pattern repository.
+     *
      * @var \Netzkoenig\Nkhyphenation\Domain\Repository\HyphenationPatternsRepository
      * @inject
      */
@@ -41,7 +41,8 @@ class HyphenateViewHelper
     /**
      * Registers the arguments.
      */
-    public function initializeArguments() {
+    public function initializeArguments()
+    {
         $this->registerArgument('language', 'int', 'Language of the hyphenated content.', TRUE);
         $this->registerArgument('preserveHtmlTags', 'boolean', 'Defines if HTML tags should be preseved.', FALSE, TRUE);
     }

@@ -23,16 +23,19 @@
 
 namespace Netzkoenig\Nkhyphenation\Domain\Repository;
 
+use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
+use TYPO3\CMS\Extbase\Persistence\Repository;
+
 /**
  * Repository for hyphenation patterns.
  *
  * @author Jost Baron <j.baron@netzkoenig.de>
  */
-class HyphenationPatternsRepository
-        extends \TYPO3\CMS\Extbase\Persistence\Repository {
-
-    public function initializeObject() {        
-        $querySettings = $this->objectManager->create('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\Typo3QuerySettings');
+class HyphenationPatternsRepository extends Repository
+{
+    public function initializeObject()
+    {
+        $querySettings = $this->objectManager->create(Typo3QuerySettings::class);
         $querySettings->setRespectStoragePage(FALSE);
         $querySettings->setRespectSysLanguage(FALSE);
         $this->setDefaultQuerySettings($querySettings);

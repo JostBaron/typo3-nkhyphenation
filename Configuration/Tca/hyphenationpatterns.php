@@ -27,130 +27,128 @@ if (!defined('TYPO3_MODE')) {
 
 $ll = 'LLL:EXT:nkhyphenation/Resources/Private/Language/locallang_db.xml:';
 
-$TCA['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
-    'ctrl' => $TCA['tx_nkhyphenation_domain_model_hyphenationpatterns']['ctrl'],
-    'columns' => array(
-        'pid' => array(
+$GLOBALS['TCA']['tx_nkhyphenation_domain_model_hyphenationpatterns'] = array(
+    'ctrl' => $GLOBALS['TCA']['tx_nkhyphenation_domain_model_hyphenationpatterns']['ctrl'],
+    'columns' => [
+        'pid' => [
             'label'   => 'pid',
-            'config'  => array(
+            'config'  => [
                 'type'     => 'passthrough',
-            ),
-        ),
-        'tstamp' => array(
+            ],
+        ],
+        'tstamp' => [
             'label'   => 'tstamp',
-            'config'  => array(
+            'config'  => [
                 'type'     => 'passthrough',
-            ),
-        ),
-        'crdate' => array(
+            ],
+        ],
+        'crdate' => [
             'label'   => 'crdate',
-            'config'  => array(
+            'config'  => [
                 'type'     => 'passthrough',
-            ),
-        ),
-        'cruser_id' => array(
+            ],
+        ],
+        'cruser_id' => [
             'label'   => 'cruser_id',
-            'config'  => array(
+            'config'  => [
                 'type'     => 'passthrough',
-            ),
-        ),
-        'system_language' => array(
+            ],
+        ],
+        'system_language' => [
             'exclude' => 1,
             'label'  => 'LLL:EXT:cms/locallang_ttc.xml:sys_language_uid_formlabel',
-            'config' => array(
+            'config' => [
                 'type'                => 'select',
                 'foreign_table'       => 'sys_language',
                 'foreign_table_where' => 'ORDER BY sys_language.title',
-                'items' => array(
-                    array('Default', '0'),
-                )
-            ),
-        ),
-        'hidden' => array(
+                'items' => [
+                    ['Default', '0'],
+                ]
+            ],
+        ],
+        'hidden' => [
             'exclude' => 1,
             'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
-            'config'  => array(
+            'config'  => [
                 'type'    => 'check',
                 'default' => '0',
-            ),
-        ),
-        'title' => array(
+            ],
+        ],
+        'title' => [
             'exclude' => 1,
             'label'   => $ll . 'hyphenationpatterns_title_label',
-            'config' => array(
+            'config' => [
                 'type'    => 'input',
                 'default' => '',
                 'eval'    => 'trim',
-            ),
-        ),
-        'wordcharacters' => array(
+            ],
+        ],
+        'wordcharacters' => [
             'exclude' => 1,
             'label'   => $ll . 'hyphenationpatterns_wordcharacters_label',
-            'config' => array(
+            'config' => [
                 'type'    => 'input',
                 'default' => '',
-            ),
-        ),
-        'hyphen' => array(
+            ],
+        ],
+        'hyphen' => [
             'exclude' => 1,
             'label'   => $ll . 'hyphenationpatterns_hyphen_label',
-            'config' => array(
+            'config' => [
                 'type'    => 'input',
                 'default' => '&shy;',
                 'eval'    => 'required',
-            ),
-        ),
-        'leftmin' => array(
+            ],
+        ],
+        'leftmin' => [
             'exclude' => 1,
             'label'   => $ll . 'hyphenationpatterns_leftmin_label',
-            'config'  => array(
+            'config'  => [
                 'type'    => 'input',
                 'default' => '2',
                 'eval'    => 'required,trim,num,int'
-            ),
-        ),
-        'rightmin' => array(
+            ],
+        ],
+        'rightmin' => [
             'exclude' => 1,
             'label'   => $ll . 'hyphenationpatterns_rightmin_label',
-            'config'  => array(
+            'config'  => [
                 'type'    => 'input',
                 'default' => '2',
                 'eval'    => 'required,trim,num,int'
-            ),
-        ),
-        'patternfile' => array(
+            ],
+        ],
+        'patternfile' => [
             'label'   => $ll . 'hyphenationpatterns_patternfile_label',
             'exclude' => 1,
             'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
                     'patternfile',
-                    array(
+                    [
                         'maxitems' => 1,
                         'minitems' => 1,
-                        'appearance' => array(
-                            'enabledControls' => array(
+                        'appearance' => [
+                            'enabledControls' => [
                                 'dragdrop' => FALSE,
                                 'localize' => FALSE,
-                            ),
-                        ),
-                    )
+                            ],
+                        ],
+                    ]
                 ),
-        ),
-        'patternfileformat' => array(
+        ],
+        'patternfileformat' => [
             'label'   => $ll . 'hyphenationpatterns_patternfileformat_label',
             'exclude' => 1,
-            'config'  => array(
+            'config'  => [
                 'type' => 'select',
-                'items' => array(
-                    array($ll . 'hyphenationpatterns_patternfileformat_hyphenatorjs_itemtext', 'hyphenatorjs'),
-                )
-            ),
-        ),
-    ),
-    'types' => array(
-        0 => array(
+                'items' => [
+                    [$ll . 'hyphenationpatterns_patternfileformat_hyphenatorjs_itemtext', 'hyphenatorjs'],
+                ]
+            ],
+        ],
+    ],
+    'types' => [
+        0 => [
             'showitem' => 'hidden,title,system_language,wordcharacters,hyphen,leftmin,rightmin,patternfile,patternfileformat',
-        ),
-    ),
+        ],
+    ],
 );
-
-?>

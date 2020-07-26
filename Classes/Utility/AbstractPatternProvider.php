@@ -28,8 +28,8 @@ namespace Netzkoenig\Nkhyphenation\Utility;
  * from one source.
  * @author Jost Baron <j.baron@netzkoenig.de>
  */
-abstract class AbstractPatternProvider {
-    
+interface AbstractPatternProvider
+{
     /**
      * @return array A list of patterns to use, order doesn't matter. Returns
      * an empty array if no patterns are given (weird pattern file...).

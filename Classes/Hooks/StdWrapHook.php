@@ -23,31 +23,40 @@
 
 namespace Netzkoenig\Nkhyphenation\Hooks;
 
+use Netzkoenig\Nkhyphenation\Domain\Repository\HyphenationPatternsRepository;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectStdWrapHookInterface;
+
 /**
  * Hook for stdWrap that adds hyphenation capabilities to stdWrap.
  *
  * @author Jost Baron <j.baron@netzkoenig.de>
  */
-class StdWrapHook implements \TYPO3\CMS\Frontend\ContentObject\ContentObjectStdWrapHookInterface {
+class StdWrapHook implements ContentObjectStdWrapHookInterface
+{
 
     /**
      * Repository for hyphenation patterns.
-     * @var \Netzkoenig\Nkhyphenation\Domain\Repository\HyphenationPatternsRepository
+     *
+     * @var HyphenationPatternsRepository
      */
-    protected $hyphenationPatternRepository = NULL;
+    protected $hyphenationPatternRepository = null;
     
     /**
      * Does nothing, only implemented to satisfy interface contract.
      * @param string $content The content to process.
      * @param array $configuration The TypoScript config of stdWrap.
-     * @param \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $parentObject
+     * @param ContentObjectRenderer $parentObject
+     *
      * The parent rendering object.
      */
     public function stdWrapOverride(
-            $content,
-            array $configuration,
-            \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer &$parentObject
-            ) {
+        $content,
+        array $configuration,
+        ContentObjectRenderer &$parentObject
+    ) {
         return $content;
     }
     
@@ -55,19 +64,17 @@ class StdWrapHook implements \TYPO3\CMS\Frontend\ContentObject\ContentObjectStdW
      * Processes the "hyphenateBefore" property.
      * @param string $content The content to process.
      * @param array $configuration The TypoScript config of stdWrap.
-     * @param \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $parentObject
+     * @param ContentObjectRenderer $parentObject
      * The parent rendering object.
      */
     public function stdWrapPreProcess(
-            $content,
-            array $configuration,
-            \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer &$parentObject
-            ) {
-        
+        $content,
+        array $configuration,
+        ContentObjectRenderer &$parentObject
+    ) {
         if (isset($configuration['hyphenateBefore.'])) {
             return $this->doHyphenation($content, $configuration['hyphenateBefore.'], $parentObject);
-        }
-        else {
+        } else {
             return $content;
         }
     }
@@ -76,19 +83,17 @@ class StdWrapHook implements \TYPO3\CMS\Frontend\ContentObject\ContentObjectStdW
      * Processes the "hyphenate" property.
      * @param string $content The content to process.
      * @param array $configuration The TypoScript config of stdWrap.
-     * @param \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $parentObject
+     * @param ContentObjectRenderer $parentObject
      * The parent rendering object.
      */
     public function stdWrapProcess(
-            $content,
-            array $configuration,
-            \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer &$parentObject
-            ) {
-        
+        $content,
+        array $configuration,
+        ContentObjectRenderer &$parentObject
+    ) {
         if (isset($configuration['hyphenate.'])) {
             return $this->doHyphenation($content, $configuration['hyphenate.'], $parentObject);
-        }
-        else {
+        } else {
             return $content;
         }
     }
@@ -97,19 +102,17 @@ class StdWrapHook implements \TYPO3\CMS\Frontend\ContentObject\ContentObjectStdW
      * Processes the "hyphenateAfter" property.
      * @param string $content The content to process.
      * @param array $configuration The TypoScript config of stdWrap.
-     * @param \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $parentObject
+     * @param ContentObjectRenderer $parentObject
      * The parent rendering object.
      */
     public function stdWrapPostProcess(
-            $content,
-            array $configuration,
-            \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer &$parentObject
-            ) {
-        
+        $content,
+        array $configuration,
+        ContentObjectRenderer &$parentObject
+    ) {
         if (isset($configuration['hyphenateAfter.'])) {
             return $this->doHyphenation($content, $configuration['hyphenateAfter.'], $parentObject);
-        }
-        else {
+        } else {
             return $content;
         }
     }
@@ -119,13 +122,14 @@ class StdWrapHook implements \TYPO3\CMS\Frontend\ContentObject\ContentObjectStdW
      * only do the logic once.
      * @param string $content The content to process.
      * @param array $configuration The TypoScript config of stdWrap.
-     * @param \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $parentObject
+     * @param ContentObjectRenderer $parentObject
      * The parent rendering object.
      */
     public function doHyphenation(
-            $content,
-            array $configuration,
-            \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer &$parentObject) {
+        $content,
+        array $configuration,
+        ContentObjectRenderer &$parentObject
+    ) {
 
         // Get the language (after some stdWrap processing)
         $languageValue = filter_var($configuration['language'], FILTER_VALIDATE_INT, array('min_range' => 0));
@@ -162,13 +166,14 @@ class StdWrapHook implements \TYPO3\CMS\Frontend\ContentObject\ContentObjectStdW
     
     /**
      * Gets (and initializes, if necessary) the pattern repository.
-     * @return \Netzkoenig\Nkhyphenation\Domain\Repository\HyphenationPatternsRepository
+     *
+     * @return HyphenationPatternsRepository
      */
-    protected function getHyphenationPatternRepository() {
-        
+    protected function getHyphenationPatternRepository(): HyphenationPatternsRepository
+    {
         if (is_null($this->hyphenationPatternRepository)) {
-            $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-            $this->hyphenationPatternRepository = $objectManager->get('Netzkoenig\\Nkhyphenation\\Domain\\Repository\\HyphenationPatternsRepository');
+            $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+            $this->hyphenationPatternRepository = $objectManager->get(HyphenationPatternsRepository::class);
         }
         
         return $this->hyphenationPatternRepository;

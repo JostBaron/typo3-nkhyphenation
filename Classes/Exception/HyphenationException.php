@@ -23,12 +23,13 @@
 
 namespace Netzkoenig\Nkhyphenation\Exception;
 
+use TYPO3\CMS\Core\Exception;
+
 /**
  * Thrown if something goes wrong with the hyphenator.
  *
  * @author Jost Baron <j.baron@netzkoenig.de>
  */
-class HyphenationException extends \TYPO3\CMS\Core\Exception {
-
-
+class HyphenationException extends Exception
+{
 }
