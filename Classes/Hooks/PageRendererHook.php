@@ -29,6 +29,7 @@ namespace Netzkoenig\Nkhyphenation\Hooks;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
@@ -52,7 +53,7 @@ class PageRendererHook
         
         if (('FE' === TYPO3_MODE) && ('1' === $settings['includeHyphenRemovalJS'])) {
 
-            $extPath = ExtensionManagementUtility::siteRelPath('nkhyphenation');
+            $extPath = PathUtility::stripPathSitePrefix(ExtensionManagementUtility::extPath('nkhyphenation'));
             $extPathWithAbsRefPrefix = $GLOBALS['TSFE']->absRefPrefix . $extPath;
             
             $scriptPath = $extPathWithAbsRefPrefix . 'Resources/Public/JavaScript/sanitizeCopiedText.js';
