@@ -1,5 +1,4 @@
 <?php
-defined('TYPO3_MODE') or die();
 
 /***************************************************************
  * Extension Manager/Repository config file for ext "nkhyphenation".
