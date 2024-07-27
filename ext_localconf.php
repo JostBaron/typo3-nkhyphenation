@@ -26,7 +26,7 @@ if (!defined('TYPO3_MODE')) {
 }
 
 // Register cache for the tries
-if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['nkhyphenation_cache'])) {
+if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['nkhyphenation_cache'] ?? null)) {
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['nkhyphenation_cache'] = [];
 }
 
